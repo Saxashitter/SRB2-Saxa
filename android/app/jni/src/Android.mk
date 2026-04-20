@@ -32,7 +32,7 @@ XTRA_MAKE_DIR := $(LOCAL_PATH)/$(SRC_XTRA)/Makefile.d
 #-DHWRENDER -DHAVE_GLES -DHAVE_GLES2
 LOCAL_CFLAGS += -DUNIXCOMMON -DLINUX \
 				-DHAVE_SDL -DHAVE_MIXER -DHAVE_MIXERX \
-				-DNOTHWRENDER -DHAVE_GLES -DHAVE_GLES2 \
+				-DNOTHWRENDER -DNOTHAVE_GLES -DNOTHAVE_GLES2 \
 				-DTOUCHINPUTS -DNATIVESCREENRES -DDIRECTFULLSCREEN \
 				-DHAVE_ZLIB -DHAVE_PNG -DHAVE_CURL \
 				-DHAVE_WHANDLE -DHAVE_THREADS -DLOGCAT -DCOMPVERSION \
@@ -45,6 +45,9 @@ include $(MAKE_DIR)/util.mk
 
 # Source files
 
+LOCAL_SRC_FILES := $(call List,$(LOCAL_PATH)/$(SRC_JNI)/Sourcefile)
+# LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_APK)/Sourcefile)
+# LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_XTRA)/Sourcefile)
 LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_MAIN)/Sourcefile)
 LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_MAIN)/blua/Sourcefile)
 LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_MAIN)/netcode/Sourcefile)
@@ -52,7 +55,7 @@ LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_MAIN)/netcode/Sourcefile)
 # LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_HWR)/Sourcefile)
 LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_SDL)/Sourcefile)
 
-LOCAL_SRC_FILES += $(SRC_SDL)/mixer_sound.c $(SRC_SDL)/i_threads.c
+LOCAL_SRC_FILES += $(SRC_SDL)/SDL_main/SDL_android_main.c $(SRC_SDL)/mixer_sound.c $(SRC_SDL)/i_threads.c
 LOCAL_SRC_FILES += $(SRC_MAIN)/comptime.c $(SRC_MAIN)/md5.c
 
 # Libraries

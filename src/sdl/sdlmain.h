@@ -34,6 +34,8 @@ extern SDL_bool framebuffer;
 // So m_menu knows whether to store cv_usejoystick value or string
 #define JOYSTICK_HOTPLUG
 
+void Impl_InitVideoSubSystem(void);
+
 /**	\brief	The JoyInfo_s struct
 
   info about joystick

@@ -152,6 +152,9 @@ SDL_Window   *window;
 SDL_Renderer *renderer;
 static SDL_Texture  *texture;
 static SDL_bool      havefocus = SDL_TRUE;
+
+static SDL_bool video_init = false;
+
 static const char *fallback_resolution_name = "Fallback";
 
 // windowed video modes from which to choose from.
@@ -186,7 +189,7 @@ static SDL_bool Impl_CreateWindow(SDL_bool fullscreen);
 //static void Impl_SetWindowName(const char *title);
 static void Impl_SetWindowIcon(void);
 
-static void SDLSetMode(INT32 width, INT32 height, SDL_bool fullscreen, SDL_bool reposition)
+static SDL_bool SDLSetMode(INT32 width, INT32 height, SDL_bool fullscreen, SDL_bool reposition)
 {
 	static SDL_bool wasfullscreen = SDL_FALSE;
 	Uint32 rmask;
@@ -226,8 +229,10 @@ static void SDLSetMode(INT32 width, INT32 height, SDL_bool fullscreen, SDL_bool 
 	}
 	else
 	{
-		Impl_CreateWindow(fullscreen);
-		wasfullscreen = fullscreen;
+        if (Impl_CreateWindow(fullscreen) == SDL_FALSE)
+            return SDL_FALSE;
+
+        wasfullscreen = fullscreen;
 		SDL_SetWindowSize(window, width, height);
 		if (fullscreen)
 		{
@@ -279,6 +284,8 @@ static void SDLSetMode(INT32 width, INT32 height, SDL_bool fullscreen, SDL_bool 
 		SDL_PixelFormatEnumToMasks(sw_texture_format, &bpp, &rmask, &gmask, &bmask, &amask);
 		vidSurface = SDL_CreateRGBSurface(0, width, height, bpp, rmask, gmask, bmask, amask);
 	}
+
+    return SDL_TRUE;
 }
 
 static void VidWaitChanged(void)
@@ -1750,6 +1757,39 @@ static void Impl_VideoSetupBuffer(void)
 	}
 }
 
+void Impl_InitVideoSubSystem(void)
+{
+    if (video_init)
+        return;
+
+    if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
+    {
+        CONS_Printf(M_GetText("Couldn't initialize SDL's Video System: %s\n"), SDL_GetError());
+        return;
+    }
+
+#ifdef HAVE_GLES
+    Impl_InitGLESDriver();
+#endif
+
+#ifdef MOBILE_PLATFORM
+    SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
+#endif
+
+#if defined(__ANDROID__)
+    // render_none means the current renderer is undetermined, so we only use SDL's renderer and texture
+    vid.width = BASEVIDWIDTH;
+    vid.height = BASEVIDHEIGHT;
+    rendermode = render_none;
+
+    // Create the window now, so that the screen doesn't change orientation later
+    if (SDLSetMode(vid.width, vid.height, USE_FULLSCREEN, SDL_TRUE) == SDL_FALSE)
+        I_Error("Couldn't initialize video");
+#endif
+
+    video_init = SDL_TRUE;
+}
+
 void I_StartupGraphics(void)
 {
 	if (dedicated)
@@ -1772,14 +1812,10 @@ void I_StartupGraphics(void)
 
 	keyboard_started = true;
 
-#if !defined(HAVE_TTF)
-	// Previously audio was init here for questionable reasons?
-	if (SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
-	{
-		CONS_Printf(M_GetText("Couldn't initialize SDL's Video System: %s\n"), SDL_GetError());
-		return;
-	}
-#endif
+    // If it wasn't already initialized
+    if (!video_init)
+        Impl_InitVideoSubSystem();
+
 	{
 		const char *vd = SDL_GetCurrentVideoDriver();
 		//CONS_Printf(M_GetText("Starting up with video driver: %s\n"), vd);
