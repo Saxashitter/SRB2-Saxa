@@ -40,23 +40,20 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <application android:label="muh port"
+    <application android:label="Blastdroid"
         android:icon="@mipmap/ic_launcher"
-        android:isGame="true"
         android:allowBackup="true"
-        android:theme="@style/AppTheme"
-        android:allowAudioPlaybackCapture="true"
-        android:hardwareAccelerated="true" >
+        android:theme="@style/AppTheme" >
 
         <activity android:name="SRB2Game"
             android:exported="true"
-            android:label="muh port"
+            android:isGame="true"
+            android:hardwareAccelerated="true"
             android:alwaysRetainTaskState="true"
+            android:screenOrientation="landscape"
             android:allowAudioPlaybackCapture="true"
             android:launchMode="singleInstance"
-            android:hardwareAccelerated="true"
-            android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
-            >
+            android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
