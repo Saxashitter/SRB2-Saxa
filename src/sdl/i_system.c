@@ -115,7 +115,7 @@ typedef LPVOID (WINAPI *p_MapViewOfFile) (HANDLE, DWORD, DWORD, DWORD, SIZE_T);
 #include <poll.h>
 #endif
 
-#if defined (__unix__) || (defined (UNIXCOMMON) && !defined (__APPLE__))
+#if defined (__unix__) || (defined (UNIXCOMMON) && !(defined (__APPLE__)) || defined(__ANDROID__))
 #include <errno.h>
 #include <sys/wait.h>
 #ifndef __HAIKU__ // haiku's crash dialog is just objectively better
@@ -2460,30 +2460,32 @@ static void I_Fork(void)
 
 INT32 I_StartupSystem(void)
 {
-	SDL_version SDLcompiled;
-	SDL_version SDLlinked;
-	SDL_VERSION(&SDLcompiled)
-	SDL_GetVersion(&SDLlinked);
-	I_start_threads();
+    SDL_version SDLcompiled;
+    SDL_version SDLlinked;
+    SDL_VERSION(&SDLcompiled)
+    SDL_GetVersion(&SDLlinked);
+#if defined(HAVE_THREADS) && !defined(__ANDROID__)
+    I_start_threads();
 	I_AddExitFunc(I_stop_threads);
-	I_StartupConsole();
+#endif
+    I_StartupConsole();
 #ifdef NEWSIGNALHANDLER
-	// This is useful when debugging. It lets GDB attach to
-	// the correct process easily.
-	if (!M_CheckParm("-nofork"))
-		I_Fork();
+    // This is useful when debugging. It lets GDB attach to
+    // the correct process easily.
+    if (!M_CheckParm("-nofork"))
+        I_Fork();
 #endif
-	I_RegisterSignals();
-	I_OutputMsg("Compiled for SDL version: %d.%d.%d\n",
-	 SDLcompiled.major, SDLcompiled.minor, SDLcompiled.patch);
-	I_OutputMsg("Linked with SDL version: %d.%d.%d\n",
-	 SDLlinked.major, SDLlinked.minor, SDLlinked.patch);
-	if (SDL_Init(0) < 0)
-		I_Error("SRB2: SDL System Error: %s", SDL_GetError()); //Alam: Oh no....
+    I_RegisterSignals();
+    I_OutputMsg("Compiled for SDL version: %d.%d.%d\n",
+                SDLcompiled.major, SDLcompiled.minor, SDLcompiled.patch);
+    I_OutputMsg("Linked with SDL version: %d.%d.%d\n",
+                SDLlinked.major, SDLlinked.minor, SDLlinked.patch);
+    if (SDL_Init(0) < 0)
+        I_Error("SRB2: SDL System Error: %s", SDL_GetError()); //Alam: Oh no....
 #ifndef NOMUMBLE
-	I_SetupMumble();
+    I_SetupMumble();
 #endif
-	return 0;
+    return 0;
 }
 
 //

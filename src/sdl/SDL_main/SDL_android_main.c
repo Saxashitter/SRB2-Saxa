@@ -162,21 +162,17 @@ int main(int argc, char* argv[])
 	boolean logging = !M_CheckParm("-nolog");
 #endif
 
-    CONS_Printf("%d", __LINE__);
 	myargc = argc;
 	myargv = argv;
 
 	// Obtain the activity class before doing anything else...
 	JNI_Startup();
 
-    CONS_Printf("%d", __LINE__);
 	// Starts threads, setups signal handlers, and initializes SDL...
 	I_OutputMsg("I_StartupSystem()...\n");
-    CONS_Printf("%d", __LINE__);
 	I_StartupSystem();
 
 	// Initialize video early...
-    CONS_Printf("%d", __LINE__);
 	Impl_InitVideoSubSystem();
 
 	// Add an event filter, since SDL_APP_* events need one.
