@@ -52,16 +52,24 @@ static void PermissionRequestMessage(void)
 
 static boolean StorageInit(void)
 {
-//	JNI_SharedStorage = I_SharedStorageLocation();
-//	return (JNI_SharedStorage != NULL);
-    // romoney5 TODO
-    return false;
+	JNI_SharedStorage = I_SharedStorageLocation();
+	return (JNI_SharedStorage != NULL);
 }
 
 static void StorageGrantedPermission(void)
 {
 	I_mkdir(JNI_SharedStorage, 0755);
 	JNI_StoragePermission = true;
+}
+
+static INT32 I_RequestSystemPermission(const char *permission)
+{
+#if defined(__ANDROID__)
+    return (INT32)SDL_AndroidRequestPermission(permission);
+#else
+    (void)permission;
+	return 0;
+#endif
 }
 
 static boolean StorageCheckPermission(void)
@@ -76,12 +84,11 @@ static boolean StorageCheckPermission(void)
 	PermissionRequestMessage();
 
 	// Permission granted. Create the directory.
-    // romoney5 TODO
-//	if (I_RequestSystemPermission(JNI_GetWriteExternalStoragePermission()))
-//	{
-//		StorageGrantedPermission();
-//		return true;
-//	}
+	if (I_RequestSystemPermission(JNI_GetWriteExternalStoragePermission()))
+	{
+		StorageGrantedPermission();
+		return true;
+	}
 
 	return false;
 }
@@ -151,8 +158,38 @@ static void InitLogging(void)
 			M_PathParts(logdir) - 1,
 			M_PathParts(logfilename) - 1, 0755);
 
-    // romoney5 TODO
-//	logstream = fopen(va("%s/latest-log.txt", I_SharedStorageLocation()), "wt+");
+	logstream = fopen(va("%s/latest-log.txt", I_SharedStorageLocation()), "wt+");
+}
+#endif
+
+static INT32 I_StoragePermission(void)
+{
+#if defined(__ANDROID__)
+    return (INT32)JNI_StoragePermissionGranted();
+#else
+    return 1;
+#endif
+}
+
+#if defined(__ANDROID__)
+static int Android_EventFilter(void *userdata, SDL_Event *event)
+{
+    (void)userdata;
+
+    switch (event->type)
+    {
+        case SDL_APP_LOWMEMORY:
+        case SDL_APP_TERMINATING:
+            // TODO
+            return 0;
+            // WILLENTERBACKGROUND and WILLENTERFOREGROUND are not handled here,
+            // since Android doesn't seem to care if they happen too late.
+            // DIDENTERBACKGROUND and DIDENTERFOREGROUND aren't handled at all
+        default:
+            break;
+    }
+
+    return 1;
 }
 #endif
 
@@ -176,8 +213,7 @@ int main(int argc, char* argv[])
 	Impl_InitVideoSubSystem();
 
 	// Add an event filter, since SDL_APP_* events need one.
-    // romoney5 TODO
-//	SDL_SetEventFilter(Android_EventFilter, NULL);
+	SDL_SetEventFilter(Android_EventFilter, NULL);
 
 	// Init shared storage...
 	if (StorageInit())
@@ -185,9 +221,8 @@ int main(int argc, char* argv[])
 
 #ifdef LOGMESSAGES
 	// Start logging...
-    // romoney5 TODO
-//	if (logging && I_StoragePermission())
-//		InitLogging();
+	if (logging && I_StoragePermission())
+		InitLogging();
 #endif
 
 	CONS_Printf("Sonic Robo Blast 2 for Android\n");

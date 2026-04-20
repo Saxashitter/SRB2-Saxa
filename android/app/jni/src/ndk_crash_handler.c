@@ -95,8 +95,7 @@ void NDKCrashHandler_ReportSignal(const char *sigmsg, int signum)
 	INT32 i;
 
 	// open crash-log.txt
-    // romoney5: i'm not stealing any more code
-//	crash_log = fopen(va("%s/crash-log.txt", I_SharedStorageLocation()), "wt+");
+	crash_log = fopen(va("%s/crash-log.txt", I_SharedStorageLocation()), "wt+");
 
 #if 0
 	// Get the current time as a string.

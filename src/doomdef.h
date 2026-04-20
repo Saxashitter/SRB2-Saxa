@@ -499,6 +499,10 @@ enum {
 #define DEFAULTDIR "srb2"
 #endif
 
+#if defined(__ANDROID__)
+#define SHAREDSTORAGEFOLDER "Sonic Robo Blast 2"
+#endif
+
 #include "g_state.h"
 
 // commonly used routines - moved here for include convenience

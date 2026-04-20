@@ -297,6 +297,16 @@ const CPUInfoFlags *I_CPUInfo(void);
 */
 const char *I_LocateWad(void);
 
+/**	\brief Location of the application's storage.
+		\return path to app-specific files
+*/
+const char *I_AppStorageLocation(void);
+
+/**	\brief Location that is considered the home.
+		\return path to shareable media files
+*/
+const char *I_SharedStorageLocation(void);
+
 /**	\brief First Joystick's events
 */
 void I_GetJoystickEvents(void);

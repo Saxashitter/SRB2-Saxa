@@ -227,6 +227,7 @@ static char returnWadPath[256];
 #endif
 
 #include "../d_main.h"
+#include "jni_android.h"
 
 #if !defined(NOMUMBLE) && defined(HAVE_MUMBLE)
 // Mumble context string
@@ -3050,6 +3051,37 @@ static const char *locateWad(void)
 	const char *WadPath;
 	int i;
 
+#if defined(__ANDROID__)
+    // Access the shared storage location
+    WadPath = I_SharedStorageLocation();
+    if (WadPath)
+    {
+        I_OutputMsg("\n\tShared storage: %s", WadPath);
+        strcpy(returnWadPath, WadPath);
+        if (isWadPathOk(returnWadPath))
+            return returnWadPath;
+    }
+
+    // Access removable storage
+    WadPath = JNI_RemovableStoragePath();
+    if (WadPath)
+    {
+        I_OutputMsg("\n\tRemovable storage: %s", WadPath);
+        strcpy(returnWadPath, WadPath);
+        if (isWadPathOk(returnWadPath))
+            return returnWadPath;
+    }
+
+    // Access app-specific storage last
+    // This will always return the path, even if isWadPathOk would fail.
+    WadPath = I_AppStorageLocation();
+    if (WadPath)
+    {
+        I_OutputMsg("\n\tApp-specific storage: %s", WadPath);
+        return WadPath;
+    }
+#endif
+
 	I_OutputMsg("SRB2WADDIR");
 	// does SRB2WADDIR exist?
 	if (((envstr = I_GetEnv("SRB2WADDIR")) != NULL) && isWadPathOk(envstr))
@@ -3121,6 +3153,38 @@ const char *I_LocateWad(void)
 #endif
 	}
 	return waddir;
+}
+
+const char *I_AppStorageLocation(void)
+{
+#if defined(__ANDROID__)
+    return SDL_AndroidGetExternalStoragePath();
+#else
+    return NULL;
+#endif
+}
+
+const char *I_SharedStorageLocation(void)
+{
+#if defined(__ANDROID__)
+    static char *sharedStorage = NULL;
+
+    if (sharedStorage == NULL)
+    {
+        char *dir = JNI_GetStorageDirectory();
+        if (dir)
+        {
+            char *gamePath = SHAREDSTORAGEFOLDER;
+            size_t size = strlen(dir) + strlen(PATHSEP) + strlen(gamePath) + 1;
+            sharedStorage = malloc(size);
+            snprintf(sharedStorage, size, "%s" PATHSEP "%s", dir, gamePath);
+        }
+    }
+
+    return sharedStorage;
+#else
+    return NULL;
+#endif
 }
 
 #ifdef __linux__
