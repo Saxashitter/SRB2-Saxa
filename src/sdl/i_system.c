@@ -3395,10 +3395,15 @@ const char *I_GetSysName(void)
 
 void I_SetTextInputMode(boolean active)
 {
+    // romoney5: disabled touch keyboard for now
+#if 0
 	if (active)
 		SDL_StartTextInput();
 	else
 		SDL_StopTextInput();
+#else
+    (void)active;
+#endif
 }
 
 boolean I_GetTextInputMode(void)
