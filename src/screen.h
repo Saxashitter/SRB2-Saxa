@@ -88,7 +88,7 @@ enum
 	VID_GL_LIBRARY_ERROR
 };
 
-#define MAXWINMODES 18
+#define MAXWINMODES 21
 
 extern INT32 windowedModes[MAXWINMODES][2];
 
