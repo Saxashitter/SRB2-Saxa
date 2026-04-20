@@ -28,10 +28,11 @@ XTRA_MAKE_DIR := $(LOCAL_PATH)/$(SRC_XTRA)/Makefile.d
 
 # Compile flags
 
+#romoney5: disabled hardware renderer
 #-DHWRENDER -DHAVE_GLES -DHAVE_GLES2
 LOCAL_CFLAGS += -DUNIXCOMMON -DLINUX \
 				-DHAVE_SDL -DHAVE_MIXER -DHAVE_MIXERX \
-				-DHWRENDER -DHAVE_GLES -DHAVE_GLES2 \
+				-DNOTHWRENDER -DHAVE_GLES -DHAVE_GLES2 \
 				-DTOUCHINPUTS -DNATIVESCREENRES -DDIRECTFULLSCREEN \
 				-DHAVE_ZLIB -DHAVE_PNG -DHAVE_CURL \
 				-DHAVE_WHANDLE -DHAVE_THREADS -DLOGCAT -DCOMPVERSION \
@@ -47,7 +48,8 @@ include $(MAKE_DIR)/util.mk
 LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_MAIN)/Sourcefile)
 LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_MAIN)/blua/Sourcefile)
 LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_MAIN)/netcode/Sourcefile)
-LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_HWR)/Sourcefile)
+#romoney5: disabled hardware renderer
+# LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_HWR)/Sourcefile)
 LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_SDL)/Sourcefile)
 
 LOCAL_SRC_FILES += $(SRC_SDL)/mixer_sound.c $(SRC_SDL)/i_threads.c
