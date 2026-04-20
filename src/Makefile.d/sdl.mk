@@ -23,9 +23,10 @@ opts+=-DDIRECTFULLSCREEN -DHAVE_SDL
 #include sdl/MakeCYG.cfg
 #endif #ifdef CYGWIN32
 
-ifndef NOHW
-sources+=sdl/ogl_sdl.c
-endif
+# STAR NOTE: handled in xtra.mk #
+#ifndef NOHW
+#sources+=sdl/ogl_sdl.c
+#endif
 
 ifdef NOMIXER
 sources+=sdl/sdl_sound.c
@@ -43,7 +44,10 @@ sources+=sdl/mixer_sound.c
   endif
 endif
 
+ifndef NOTHREADS
+opts+=-DHAVE_THREADS
 sources+=sdl/i_threads.c
+endif
 
 ifdef SDL_PKGCONFIG
 $(eval $(call Use_pkg_config,SDL))

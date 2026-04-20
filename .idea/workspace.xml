@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ca527039-ab94-45dc-8757-3555adf0f635" name="Changes" comment="Replace &quot;android/&quot; contents with files from romoney5/SRB2-edit-android">
+      <change beforePath="$PROJECT_DIR$/android/.classpath" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.project" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/.settings/org.eclipse.jdt.core.prefs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/Android.mk" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/AndroidManifest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/default.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/gen/org/srb2/R.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/res/drawable-hdpi/icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/res/drawable-ldpi/icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/res/drawable-mdpi/icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/res/layout/main.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/res/values/strings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/org/srb2/GameThread.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/org/srb2/SRB2Game.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/org/srb2/nativecode/Main.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/org/srb2/nativecode/SRB2.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/src/org/srb2/nativecode/Video.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Saxashitter&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Saxashitter/SRB2-Saxa.git&quot;,
+    &quot;accountId&quot;: &quot;c424fbe8-d34b-4666-a932-bbc07db8fcfc&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="3CdXCkEFX6mtBvHVk9D7NJurdPi" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "master",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/peter/StudioProjects/SRB2-Saxa"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\peter\StudioProjects\SRB2-Saxa\android" />
+    </key>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ca527039-ab94-45dc-8757-3555adf0f635" name="Changes" comment="" />
+      <created>1776716295051</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1776716295051</updated>
+    </task>
+    <task id="LOCAL-00001" summary="Replace &quot;android/&quot; contents with files from romoney5/SRB2-edit-android">
+      <option name="closed" value="true" />
+      <created>1776716404502</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1776716404502</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Replace &quot;android/&quot; contents with files from romoney5/SRB2-edit-android">
+      <option name="closed" value="true" />
+      <created>1776716440363</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1776716440363</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Replace &quot;android/&quot; contents with files from romoney5/SRB2-edit-android" />
+    <option name="LAST_COMMIT_MESSAGE" value="Replace &quot;android/&quot; contents with files from romoney5/SRB2-edit-android" />
+  </component>
+</project>
