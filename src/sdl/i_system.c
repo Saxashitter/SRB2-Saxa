@@ -154,7 +154,7 @@ typedef LPVOID (WINAPI *p_MapViewOfFile) (HANDLE, DWORD, DWORD, DWORD, SIZE_T);
 #include <errno.h>
 #endif
 
-#if defined (__unix__) || defined(__APPLE__) || defined (UNIXCOMMON)
+#if (defined (__unix__) || defined(__APPLE__) || defined (UNIXCOMMON)) && !defined(__ANDROID__)
 #if !defined (__EMSCRIPTEN__)
 #ifndef NOEXECINFO
 #include <execinfo.h>
@@ -286,6 +286,7 @@ SDL_bool framebuffer = SDL_FALSE;
 UINT8 keyboard_started = false;
 
 #ifdef UNIXBACKTRACE
+#error Weiga
 
 static void bt_write_file(int fd, const char *string) {
 	ssize_t written = 0;
