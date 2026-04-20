@@ -44,9 +44,6 @@ include $(MAKE_DIR)/util.mk
 
 # Source files
 
-LOCAL_SRC_FILES := $(call List,$(LOCAL_PATH)/$(SRC_JNI)/Sourcefile)
-LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_APK)/Sourcefile)
-LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_XTRA)/Sourcefile)
 LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_MAIN)/Sourcefile)
 LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_MAIN)/blua/Sourcefile)
 LOCAL_SRC_FILES += $(call List,$(LOCAL_PATH)/$(SRC_MAIN)/netcode/Sourcefile)
