@@ -3671,6 +3671,7 @@ void M_StartControlPanel(void)
 	}
 
 	menuactive = true;
+
 #ifdef __ANDROID__
 	JNI_SetTouchLayout("MenuNavigation");
 #endif
@@ -3811,13 +3812,14 @@ void M_ClearMenus(boolean callexitmenufunc)
 	if (currentMenu == &MessageDef) // Oh sod off!
 		currentMenu = &MainDef; // Not like it matters
 	menuactive = false;
+	hidetitlemap = false;
+
 #ifdef __ANDROID__
 	if (gamestate == GS_LEVEL)
 		JNI_SetTouchLayout("Gameplay");
 	else
 		JNI_SetTouchLayout("FakeNothing");
 #endif
-	hidetitlemap = false;
 
 	I_UpdateMouseGrab();
 }
@@ -10119,7 +10121,6 @@ static void M_TimeAttack(INT32 choice)
 
 	G_SetGamestate(GS_TIMEATTACK); // do this before M_SetupNextMenu so that menu meta state knows that we're switching
 	titlemapinaction = TITLEMAP_OFF; // Nope don't give us HOMs please
-	JNI_SetTouchLayout("MenuNavigation");
 	M_SetupNextMenu(&SP_TimeAttackDef);
 	if (!M_CanShowLevelInList(cv_nextmap.value-1, -1) && levelselect.rows[0].maplist[0])
 		CV_SetValue(&cv_nextmap, levelselect.rows[0].maplist[0]);
@@ -10362,7 +10363,6 @@ static void M_NightsAttack(INT32 choice)
 
 	G_SetGamestate(GS_TIMEATTACK); // do this before M_SetupNextMenu so that menu meta state knows that we're switching
 	titlemapinaction = TITLEMAP_OFF; // Nope don't give us HOMs please
-	JNI_SetTouchLayout("MenuNavigation");
 	M_SetupNextMenu(&SP_NightsAttackDef);
 	if (!M_CanShowLevelInList(cv_nextmap.value-1, -1) && levelselect.rows[0].maplist[0])
 		CV_SetValue(&cv_nextmap, levelselect.rows[0].maplist[0]);
@@ -10693,7 +10693,6 @@ static void M_ModeAttackEndGame(INT32 choice)
 	M_UpdateItemOn();
 	G_SetGamestate(GS_TIMEATTACK);
 	modeattacking = ATTACKING_NONE;
-	JNI_SetTouchLayout("MenuNavigation");
 	M_ChangeMenuMusic("_title", true);
 	Nextmap_OnChange();
 }
@@ -10771,7 +10770,6 @@ static void M_Marathon(INT32 choice)
 	SP_MarathonDef.prevMenu = &MainDef;
 	G_SetGamestate(GS_TIMEATTACK); // do this before M_SetupNextMenu so that menu meta state knows that we're switching
 	titlemapinaction = TITLEMAP_OFF; // Nope don't give us HOMs please
-	JNI_SetTouchLayout("FakeNothing");
 	M_SetupNextMenu(&SP_MarathonDef);
 	itemOn = marathonstart; // "Start" is selected.
 	M_UpdateItemOn();
