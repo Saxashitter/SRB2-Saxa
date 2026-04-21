@@ -39,6 +39,10 @@
 #include "taglist.h" // P_FindSpecialLineFromTag
 #include "lua_hook.h" // hook_cmd_running errors
 
+#ifdef __ANDROID__
+#include "jni_android.h"
+#endif
+
 #define NOHUD if (hud_running)\
 return luaL_error(L, "HUD rendering code should not call this function!");\
 else if (hook_cmd_running)\
@@ -4345,6 +4349,41 @@ static int lib_getTimeMicros(lua_State *L)
 	return 1;
 }
 
+// ANDROID EXCLUSIVE
+#ifdef __ANDROID__
+static int lib_jniSetTouchLayout(lua_State *L) {
+	const char *layoutName = luaL_checkstring(L, 1);
+	if (layoutName == NULL)
+		return luaL_error(L,
+			  "JNI_SetTouchLayout needs to have a string."
+		);
+
+	JNI_SetTouchLayout(layoutName);
+	return 1;
+}
+
+static int lib_jniSetTouchVisible(lua_State *L) {
+	const boolean visible = luaL_checkboolean(L, 1);
+	if (visible == NULL)
+		return luaL_error(L,
+			  "JNI_SetTouchVisible needs to have a boolean."
+		);
+
+	JNI_SetTouchVisible(visible);
+	return 1;
+}
+
+static int lib_jniGetTouchLayout(lua_State *L) {
+	lua_pushstring(L, JNI_GetTouchLayout());
+	return 1;
+}
+
+static int lib_jniGetTouchVisible(lua_State *L) {
+	lua_pushboolean(L, JNI_GetTouchVisible());
+	return 1;
+}
+#endif
+
 static luaL_Reg lib[] = {
 	{"print", lib_print},
 	{"chatprint", lib_chatprint},
@@ -4652,6 +4691,14 @@ static luaL_Reg lib[] = {
 	{"G_TicsToMilliseconds",lib_gTicsToMilliseconds},
 
 	{"getTimeMicros",lib_getTimeMicros},
+
+	// ANDROID EXCLUSIVE
+#ifdef __ANDROID__
+	{"JNI_SetTouchLayout",lib_jniSetTouchLayout},
+	{"JNI_SetTouchVisible",lib_jniSetTouchVisible},
+	{"JNI_GetTouchLayout",lib_jniGetTouchLayout},
+	{"JNI_GetTouchVisible",lib_jniGetTouchVisible},
+#endif
 
 	{NULL, NULL}
 };

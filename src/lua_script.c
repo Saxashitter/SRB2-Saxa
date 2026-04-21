@@ -154,9 +154,16 @@ int LUA_Call(lua_State *L, int nargs, int nresults, int errorhandlerindex)
 }
 
 // Moved here from lib_getenum.
-int LUA_PushGlobals(lua_State *L, const char *word)
-{
-	if (fastcmp(word,"gamemap")) {
+int LUA_PushGlobals(lua_State *L, const char *word) {
+	// ANDROID EXCLUSIVE
+	if (fastcmp(word, "android")) {
+#ifdef __ANDROID__
+		lua_pushboolean(L, true);
+#else
+		lua_pushboolean(L, false); // if on pc but not on android? for what reason are you doing this lol
+#endif
+		return 1;
+	} else if (fastcmp(word,"gamemap")) {
 		lua_pushinteger(L, gamemap);
 		return 1;
 	} else if (fastcmp(word,"udmf")) {
