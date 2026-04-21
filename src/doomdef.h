@@ -500,7 +500,7 @@ enum {
 #endif
 
 #if defined(__ANDROID__)
-#define SHAREDSTORAGEFOLDER "Sonic Robo Blast 2"
+#define SHAREDSTORAGEFOLDER ".Blastdroid"
 #endif
 
 #include "g_state.h"
