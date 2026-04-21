@@ -1,22 +1,22 @@
-package org.stjr.srb2;
+package org.stjr.srb2.touch;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.MotionEvent;
 
-class TouchJoystick extends TouchButton {
-    public TouchButton up, down, left, right;
+public class Joystick extends Button {
+    public Button up, down, left, right;
     public float spacing;
     public double joystickInputAngle = 60;
 
-    public TouchJoystick(float sx, float sy, float ox, float oy, float r, float spacing,
-                         Integer lb, Integer db, Integer ub, Integer rb) {
+    public Joystick(float sx, float sy, float ox, float oy, float r, float spacing,
+                    Integer lb, Integer db, Integer ub, Integer rb) {
         super(sx, sy, ox, oy, r, "Move", -1);
         this.spacing = spacing;
-        up    = new TouchButton(sx, sy, ox, oy - spacing, r, "U", ub);
-        down  = new TouchButton(sx, sy, ox, oy + spacing, r, "D", db);
-        left  = new TouchButton(sx, sy, ox - spacing, oy, r, "L", lb);
-        right = new TouchButton(sx, sy, ox + spacing, oy, r, "R", rb);
+        up    = new Button(sx, sy, ox, oy - spacing, r, "U", ub);
+        down  = new Button(sx, sy, ox, oy + spacing, r, "D", db);
+        left  = new Button(sx, sy, ox - spacing, oy, r, "L", lb);
+        right = new Button(sx, sy, ox + spacing, oy, r, "R", rb);
     }
 
     @Override

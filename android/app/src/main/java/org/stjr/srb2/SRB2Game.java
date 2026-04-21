@@ -1,6 +1,7 @@
 package org.stjr.srb2;
 
 import org.libsdl.app.SDLActivity;
+import org.stjr.srb2.touch.MasterControls;
 
 import android.app.Activity;
 import android.content.pm.PackageManager;
@@ -8,7 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 public class SRB2Game extends SDLActivity {
-	public static TouchControls masterTouchClass;
+	public static MasterControls masterTouchClass;
 	public static boolean checkPermission(String permission) {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
 			return true;
@@ -26,7 +27,7 @@ public class SRB2Game extends SDLActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		TouchControls masterTouchClass = new TouchControls(this);
+		MasterControls masterTouchClass = new MasterControls(this);
 		mLayout.addView(masterTouchClass);
 	}
 }

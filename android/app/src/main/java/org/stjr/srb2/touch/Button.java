@@ -1,4 +1,4 @@
-package org.stjr.srb2;
+package org.stjr.srb2.touch;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import org.libsdl.app.SDLActivity;
 
-public class TouchButton {
+public class Button {
     // Shared KeyMap for all buttons
 
     public float scaleX, scaleY, offsetX, offsetY, radius;
@@ -14,8 +14,9 @@ public class TouchButton {
     public Integer bind;
     public boolean inputDown;
     public int touchId = -1;
+    public boolean visible = true;
 
-    public TouchButton(float sx, float sy, float ox, float oy, float r, String n, Integer b) {
+    public Button(float sx, float sy, float ox, float oy, float r, String n, Integer b) {
         this.scaleX = sx;
         this.scaleY = sy;
         this.offsetX = ox;
@@ -54,25 +55,28 @@ public class TouchButton {
         if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
             if (inside && !this.inputDown) {
                 press(true, id);
-                Log.i("TouchButton", "Pressed (HARD): "+id);
+                Log.i("TouchButton", "Pressed (HARD): " + id);
             }
-        }
-        else if (action == MotionEvent.ACTION_MOVE) {
-           if (this.touchId == -1 && inside && !this.inputDown) {
-                // Slide-to-activate
+        } else if (action == MotionEvent.ACTION_MOVE) {
+            if (this.touchId == id) {
+                // If it's OUR finger moving, we can check if it slid OUT (optional)
+                // For now, let's just make sure we don't react to OTHER fingers moving
+            } else if (this.touchId == -1 && inside && !this.inputDown) {
+                // Slide-to-activate (Finger wasn't on button, but moved onto it)
                 press(true, id);
-               Log.i("TouchButton", "Released (SOFT): "+id);
+                Log.i("TouchButton", "Pressed (SOFT): " + id);
             }
-        }
-        else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_CANCEL) {
+        } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_CANCEL) {
             if (this.touchId == id && this.inputDown) {
                 press(false, -1);
-                Log.i("TouchButton", "Released (HARD): "+id);
+                Log.i("TouchButton", "Released: " + id);
             }
         }
     }
 
     public void draw(Canvas canvas, Paint paint, Paint pressedPaint, Paint textPaint) {
+        if (!visible) return;
+
         float[] pos = getXYPosition(canvas.getWidth(), canvas.getHeight());
         canvas.drawCircle(pos[0], pos[1], radius, inputDown ? pressedPaint : paint);
         float textY = pos[1] - ((textPaint.descent() + textPaint.ascent()) / 2);

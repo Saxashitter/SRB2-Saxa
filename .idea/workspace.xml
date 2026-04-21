@@ -5,12 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ca527039-ab94-45dc-8757-3555adf0f635" name="Changes" comment="Replace &quot;android/&quot; contents with files from romoney5/SRB2-edit-android">
+      <change afterPath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/layout/FakeNothing.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/layout/MenuNavigation.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/touch/TouchLayout.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/touch/TouchRectButton.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/app/jni/src/jni_android.c" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/jni/src/jni_android.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/jni/src/jni_android.h" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/jni/src/jni_android.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/SRB2Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/SRB2Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/TouchControls.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/TouchControls.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/m_menu.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/m_menu.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/TouchButton.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/touch/TouchButton.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/TouchControls.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/touch/TouchControls.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/TouchJoystick.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/touch/TouchJoystick.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
