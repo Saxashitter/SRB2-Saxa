@@ -73,14 +73,29 @@ public class TouchControls extends View {
         int width = getWidth();
         int height = getHeight();
 
+        // Loop through every finger currently touching the screen
         for (int i = 0; i < event.getPointerCount(); i++) {
             float x = event.getX(i);
             float y = event.getY(i);
             int id = event.getPointerId(i);
-            for (TouchButton b : buttons) {
-                b.handleTouch(action, x, y, id, width, height);
+
+            // For DOWN or UP events, Android only cares about the finger that just changed.
+            // We filter that finger here.
+            int actionIndex = event.getActionIndex();
+
+            if (action == MotionEvent.ACTION_MOVE) {
+                // Move events apply to all pointers
+                for (TouchButton b : buttons) {
+                    b.handleTouch(action, x, y, id, width, height);
+                }
+            } else if (i == actionIndex) {
+                // Down/Up/PointerDown/PointerUp only apply to the finger at the action index
+                for (TouchButton b : buttons) {
+                    b.handleTouch(action, x, y, id, width, height);
+                }
             }
         }
+
         invalidate();
         return true;
     }

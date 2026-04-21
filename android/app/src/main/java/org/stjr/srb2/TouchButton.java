@@ -2,6 +2,7 @@ package org.stjr.srb2;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import org.libsdl.app.SDLActivity;
 
@@ -51,19 +52,22 @@ public class TouchButton {
         boolean inside = isPointInside(x, y, w, h);
 
         if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
-            if (inside) {
+            if (inside && !this.inputDown) {
                 press(true, id);
+                Log.i("TouchButton", "Pressed (HARD): "+id);
             }
         }
         else if (action == MotionEvent.ACTION_MOVE) {
            if (this.touchId == -1 && inside && !this.inputDown) {
                 // Slide-to-activate
                 press(true, id);
+               Log.i("TouchButton", "Released (SOFT): "+id);
             }
         }
         else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_CANCEL) {
-            if (this.touchId == id) {
+            if (this.touchId == id && this.inputDown) {
                 press(false, -1);
+                Log.i("TouchButton", "Released (HARD): "+id);
             }
         }
     }

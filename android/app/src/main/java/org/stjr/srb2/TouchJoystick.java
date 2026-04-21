@@ -52,9 +52,12 @@ class TouchJoystick extends TouchButton {
             updateDirectionalInput(x, y, w, h, id);
         } else if (action == MotionEvent.ACTION_MOVE && touchId == id) {
             updateDirectionalInput(x, y, w, h, id);
-        } else if (action == MotionEvent.ACTION_UP && touchId == id) {
+        } else if ((action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_CANCEL) && touchId == id) {
             this.touchId = -1;
-            up.press(false, -1); down.press(false, -1); left.press(false, -1); right.press(false, -1);
+            up.press(false, -1);
+            down.press(false, -1);
+            left.press(false, -1);
+            right.press(false, -1);
         }
     }
 }

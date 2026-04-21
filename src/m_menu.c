@@ -18,10 +18,6 @@
 
 #include "m_menu.h"
 
-#ifdef __ANDROID__
-void JNI_SetTouchControlsVisible(boolean visible);
-#endif
-
 #include "doomdef.h"
 #include "d_main.h"
 #include "netcode/d_netcmd.h"
@@ -3676,7 +3672,7 @@ void M_StartControlPanel(void)
 
 	menuactive = true;
 #ifdef __ANDROID__
-	JNI_SetTouchControlsVisible(false);
+	// JNI_SetTouchControlsVisible(false);
 #endif
 
 	if (!Playing())
@@ -3816,7 +3812,7 @@ void M_ClearMenus(boolean callexitmenufunc)
 		currentMenu = &MainDef; // Not like it matters
 	menuactive = false;
 #ifdef __ANDROID__
-	JNI_SetTouchControlsVisible(false);
+	JNI_SetTouchControlsVisible(true);
 #endif
 	hidetitlemap = false;
 
