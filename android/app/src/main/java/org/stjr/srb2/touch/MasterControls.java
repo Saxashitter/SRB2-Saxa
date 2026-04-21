@@ -13,7 +13,9 @@ import org.stjr.srb2.layout.MenuNavigation;
 public class MasterControls extends View {
     private final Paint paint, pressedPaint, textPaint;
     private Layout currentLayout; // The active behavior
+    private String currentLayoutName;
 
+    // Initalizes controls and gets control layout.
     public MasterControls(Context context, String layoutName) {
         super(context);
 
@@ -36,7 +38,9 @@ public class MasterControls extends View {
         setLayoutByName(layoutName);
     }
 
+    // Used in C and during initalization.
     public void setLayoutByName(String layoutName) {
+        this.currentLayoutName = layoutName;
         post(() -> {
             try {
                 // Dynamically find the class in the layout package
@@ -52,10 +56,22 @@ public class MasterControls extends View {
         });
     }
 
+    // Used in C
     public void setControlsVisible(final boolean visible) {
         post(() -> setVisibility(visible ? VISIBLE : GONE));
     }
 
+    // Used in C
+    public boolean getControlsVisible() {
+        return getVisibility() == VISIBLE;
+    }
+
+    // Used in C
+    public String getLayoutName() {
+        return currentLayoutName;
+    }
+
+    // Used in C and initalizing
     public void setLayout(Layout layout) {
         if (currentLayout != null) {
             currentLayout.releaseAll(); // Clean up keys before swapping
@@ -64,6 +80,7 @@ public class MasterControls extends View {
         invalidate();
     }
 
+    // What happens on touch?
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (currentLayout == null) return false;

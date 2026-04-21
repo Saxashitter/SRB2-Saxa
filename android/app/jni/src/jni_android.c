@@ -444,7 +444,7 @@ void JNI_SetTouchLayout(const char *layoutName)
 	}
 }
 
-void JNI_SetTouchControlsVisible(boolean visible)
+void JNI_SetTouchVisible(boolean visible)
 {
 	JNIEnv *env = JNI_GetEnv();
 	jclass controlsClass;
@@ -460,4 +460,54 @@ void JNI_SetTouchControlsVisible(boolean visible)
 		(*env)->DeleteLocalRef(env, controlsClass);
 		(*env)->DeleteLocalRef(env, controlsObj);
 	}
+}
+
+boolean JNI_GetTouchVisible(void)
+{
+	JNIEnv *env = JNI_GetEnv();
+	jclass controlsClass;
+	jobject controlsObj = JNI_GetMasterControls(env, &controlsClass);
+	jboolean visible = JNI_FALSE;
+
+	if (controlsObj)
+	{
+		jmethodID mid = (*env)->GetMethodID(env, controlsClass, "getControlsVisible", "()Z");
+		if (mid)
+		{
+			visible = (*env)->CallBooleanMethod(env, controlsObj, mid);
+		}
+		(*env)->DeleteLocalRef(env, controlsClass);
+		(*env)->DeleteLocalRef(env, controlsObj);
+	}
+	return (visible == JNI_TRUE);
+}
+
+const char *JNI_GetTouchLayout(void)
+{
+	JNIEnv *env = JNI_GetEnv();
+	jclass controlsClass;
+	jobject controlsObj = JNI_GetMasterControls(env, &controlsClass);
+	static char layoutName[64];
+
+	layoutName[0] = '\0';
+
+	if (controlsObj)
+	{
+		jmethodID mid = (*env)->GetMethodID(env, controlsClass, "getLayoutName", "()Ljava/lang/String;");
+		if (mid)
+		{
+			jstring jstr = (*env)->CallObjectMethod(env, controlsObj, mid);
+			if (jstr)
+			{
+				const char *str = (*env)->GetStringUTFChars(env, jstr, NULL);
+				strncpy(layoutName, str, sizeof(layoutName) - 1);
+				layoutName[sizeof(layoutName) - 1] = '\0';
+				(*env)->ReleaseStringUTFChars(env, jstr, str);
+				(*env)->DeleteLocalRef(env, jstr);
+			}
+		}
+		(*env)->DeleteLocalRef(env, controlsClass);
+		(*env)->DeleteLocalRef(env, controlsObj);
+	}
+	return layoutName;
 }
