@@ -26,6 +26,7 @@ void JNI_Startup(void);
 void JNI_SetupActivity(void);
 void JNI_SetupDeviceInfo(void);
 void JNI_SetupABIList(void);
+void JNI_SetTouchControlsVisible(boolean visible);
 
 typedef enum JNI_DeviceInfo_e
 {

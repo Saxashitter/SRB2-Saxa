@@ -89,4 +89,14 @@ public class TouchControls extends View {
     protected void onDraw(Canvas canvas) {
         for (TouchButton b : buttons) b.draw(canvas, paint, pressedPaint, textPaint);
     }
+
+    public void setControlsVisible(final boolean visible) {
+        // Since this touches the UI, it's best to ensure it runs on the UI thread
+        post(new Runnable() {
+            @Override
+            public void run() {
+                setVisibility(visible ? VISIBLE : GONE);
+            }
+        });
+    }
 }

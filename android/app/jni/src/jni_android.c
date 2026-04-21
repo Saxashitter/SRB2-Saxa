@@ -404,3 +404,33 @@ boolean JNI_IsInMultiWindowMode(void)
 	jboolean multiwindow = (*env)->CallStaticBooleanMethod(env, activityClass, method);
 	return (multiwindow == JNI_TRUE);
 }
+
+void JNI_SetTouchControlsVisible(boolean visible)
+{
+	JNIEnv *env = JNI_GetEnv();
+	if (!env) return;
+
+	// 1. Find the SRB2Game class (stored in activityClass)
+	// 2. Get the static field ID for masterTouchClass
+	jfieldID masterTouchField = (*env)->GetStaticFieldID(env, activityClass,
+														 "masterTouchClass", "Lorg/stjr/srb2/TouchControls;");
+
+	if (masterTouchField) {
+		// 3. Get the TouchControls object from the static field
+		jobject controlsObj = (*env)->GetStaticObjectField(env, activityClass, masterTouchField);
+
+		if (controlsObj) {
+			// 4. Find the 'setControlsVisible' method in TouchControls class
+			jclass controlsClass = (*env)->GetObjectClass(env, controlsObj);
+			jmethodID setVisibleMid = (*env)->GetMethodID(env, controlsClass,
+														  "setControlsVisible", "(Z)V");
+
+			if (setVisibleMid) {
+				// 5. Finally, call the method!
+				(*env)->CallVoidMethod(env, controlsObj, setVisibleMid, (jboolean)visible);
+			}
+			(*env)->DeleteLocalRef(env, controlsClass);
+			(*env)->DeleteLocalRef(env, controlsObj);
+		}
+	}
+}

@@ -18,6 +18,10 @@
 
 #include "m_menu.h"
 
+#ifdef __ANDROID__
+void JNI_SetTouchControlsVisible(boolean visible);
+#endif
+
 #include "doomdef.h"
 #include "d_main.h"
 #include "netcode/d_netcmd.h"
@@ -94,6 +98,10 @@
 #define SLIDER_WIDTH 78
 #define SERVERS_PER_PAGE 11
 
+#ifdef __ANDROID__
+#include "jni_android.h"
+#endif
+
 typedef enum
 {
 	QUITMSG = 0,
@@ -138,6 +146,10 @@ static char *char_notes = NULL;
 
 boolean menuactive = false;
 boolean fromlevelselect = false;
+
+#ifdef __ANDROID__
+#include "jni_android.h"
+#endif
 
 typedef enum
 {
@@ -532,6 +544,10 @@ static menuitem_t MAPauseMenu[] =
 	{IT_CALL | IT_STRING,    NULL, "Abort",                M_ModeAttackEndGame,   64},
 };
 
+#ifdef __ANDROID__
+#include "jni_android.h"
+#endif
+
 typedef enum
 {
 	mapause_hints,
@@ -565,6 +581,10 @@ static menuitem_t MPauseMenu[] =
 	{IT_STRING | IT_CALL,    NULL, "Return to Title",           M_EndGame,             88},
 	{IT_STRING | IT_CALL,    NULL, "Quit Game",                 M_QuitSRB2,            96},
 };
+
+#ifdef __ANDROID__
+#include "jni_android.h"
+#endif
 
 typedef enum
 {
@@ -603,6 +623,10 @@ static menuitem_t SPauseMenu[] =
 	{IT_CALL | IT_STRING,    NULL, "Return to Title",      M_EndGame,             80},
 	{IT_CALL | IT_STRING,    NULL, "Quit Game",            M_QuitSRB2,            88},
 };
+
+#ifdef __ANDROID__
+#include "jni_android.h"
+#endif
 
 typedef enum
 {
@@ -3651,6 +3675,9 @@ void M_StartControlPanel(void)
 	}
 
 	menuactive = true;
+#ifdef __ANDROID__
+	JNI_SetTouchControlsVisible(false);
+#endif
 
 	if (!Playing())
 	{
@@ -3788,6 +3815,9 @@ void M_ClearMenus(boolean callexitmenufunc)
 	if (currentMenu == &MessageDef) // Oh sod off!
 		currentMenu = &MainDef; // Not like it matters
 	menuactive = false;
+#ifdef __ANDROID__
+	JNI_SetTouchControlsVisible(false);
+#endif
 	hidetitlemap = false;
 
 	I_UpdateMouseGrab();
