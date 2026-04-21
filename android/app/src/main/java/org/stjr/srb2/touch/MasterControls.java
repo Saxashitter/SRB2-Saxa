@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 // CONTROL SCHEMES
-import org.stjr.srb2.layout.FakeNothing;
+import org.stjr.srb2.layout.MenuNavigation;
 
 public class MasterControls extends View {
     private final Paint paint, pressedPaint, textPaint;
@@ -33,7 +33,7 @@ public class MasterControls extends View {
         textPaint.setTextAlign(Paint.Align.CENTER);
 
         // Start with the standard layout
-        setLayout(new FakeNothing());
+        setLayout(new MenuNavigation());
     }
 
     public void setLayout(Layout layout) {
