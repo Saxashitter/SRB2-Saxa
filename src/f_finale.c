@@ -44,6 +44,10 @@
 #include "lua_hud.h"
 #include "lua_hook.h"
 
+#ifdef __ANDROID__
+#include "jni_android.h"
+#endif
+
 // Stage of animation:
 // 0 = text, 1 = art screen
 INT32 finalecount;
@@ -503,6 +507,7 @@ void F_StartIntro(void)
 */
 
 	G_SetGamestate(GS_INTRO);
+	JNI_SetTouchLayout("FakeNothing");
 	gameaction = ga_nothing;
 	paused = false;
 	CON_ToggleOff();
@@ -1038,6 +1043,16 @@ static const char *credits[] = {
 	"\1Sonic Robo Blast 2",
 	"\1Credits",
 	"",
+	"\1Android Port",
+	"Saxashitter",
+	"romoney5",
+	"\1Port Contributors",
+	"simon/sanicblock",
+	"\1Inspired by",
+	"Lactozilla",
+	"bitten2up",
+	"StarManiaKG",
+	"edotdot",
 	"\1Game Design",
 	"Sonic Team Junior",
 	"\"SSNTails\"",
@@ -1258,6 +1273,7 @@ static const UINT8 credits_numpics = sizeof(credits_pics)/sizeof(credits_pics[0]
 void F_StartCredits(void)
 {
 	G_SetGamestate(GS_CREDITS);
+	JNI_SetTouchLayout("FakeNothing");
 
 	// Just in case they're open ... somehow
 	M_ClearMenus(true);
@@ -1775,6 +1791,7 @@ static void F_CacheGoodEnding(void)
 void F_StartEnding(void)
 {
 	G_SetGamestate(GS_ENDING);
+	JNI_SetTouchLayout("FakeNothing");
 	wipetypepost = INT16_MAX;
 
 	// Just in case they're open ... somehow
@@ -2233,6 +2250,7 @@ void F_StartGameEnd(void)
 	M_ClearMenus(true);
 
 	timetonext = TICRATE;
+	JNI_SetTouchLayout("FakeNothing");
 }
 
 //
@@ -2495,6 +2513,8 @@ void F_StartTitleScreen(void)
 	}
 
 	G_SetGamestate(GS_TITLESCREEN);
+	JNI_SetTouchLayout("FakeNothing");
+
 
 	// IWAD dependent stuff.
 
@@ -3613,6 +3633,8 @@ void F_StartContinue(void)
 	timetonext = (11*TICRATE)+11;
 	continuetime = 0;
 
+	JNI_SetTouchLayout("FakeNothing");
+
 	// allocate and/or clear Lua continue screen draw lists
 	for (i = 0; i < 2; i++)
 	{
@@ -4028,6 +4050,8 @@ void F_StartCustomCutscene(INT32 cutscenenum, boolean precutscene, boolean reset
 	else
 		S_StopMusic();
 	S_StopSounds();
+
+	JNI_SetTouchLayout("FakeNothing");
 }
 
 //

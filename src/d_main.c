@@ -97,6 +97,9 @@
 #endif
 
 #include "lua_script.h"
+#ifdef __ANDROID__
+#include "jni_android.h"
+#endif
 
 // Version numbers for netplay :upside_down_face:
 int    VERSION;
@@ -984,6 +987,7 @@ void D_StartTitle(void)
 		if (gametyperules & GTR_CAMPAIGN)
 		{
 			G_SetGamestate(GS_WAITINGPLAYERS); // hack to prevent a command repeat
+
 
 			if (server)
 			{

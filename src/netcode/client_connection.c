@@ -35,6 +35,9 @@
 #if defined (__GNUC__) || defined (__unix__)
 #include <unistd.h>
 #endif
+#ifdef __ANDROID__
+#include "jni_android.h"
+#endif
 
 cl_mode_t cl_mode = CL_SEARCHING;
 static UINT16 cl_lastcheckedfilecount = 0;	// used for full file list
@@ -1246,6 +1249,8 @@ void CL_ConnectToServer(void)
 	DEBFILE(va("waiting %d nodes\n", doomcom->numnodes));
 	G_SetGamestate(GS_WAITINGPLAYERS);
 	wipegamestate = GS_WAITINGPLAYERS;
+	JNI_SetTouchLayout("FakeNothing");
+
 
 	ClearAdminPlayers();
 	pnumnodes = 1;

@@ -53,6 +53,10 @@
 #include "lua_hud.h"
 #include "lua_libs.h"
 
+#ifdef __ANDROID__
+#include "jni_android.h"
+#endif
+
 gameaction_t gameaction;
 gamestate_t gamestate = GS_NULL;
 UINT8 ultimatemode = false;
@@ -4188,6 +4192,7 @@ static void G_DoCompleted(void)
 		Y_StartIntermission();
 		Y_LoadIntermissionData();
 		G_HandleSaveLevel();
+		JNI_SetTouchLayout("FakeNothing");
 	}
 }
 
@@ -5148,7 +5153,14 @@ void G_InitNew(UINT8 pultmode, const char *mapname, boolean resetplayer, boolean
 	if ((gametyperules & GTR_CUTSCENES) && !skipprecutscene && mapheaderinfo[gamemap-1]->precutscenenum && !modeattacking && !(marathonmode & MA_NOCUTSCENES)) // Start a custom cutscene.
 		F_StartCustomCutscene(mapheaderinfo[gamemap-1]->precutscenenum-1, true, resetplayer, FLS);
 	else
+#ifdef __ANDROID__
+	{
 		G_DoLoadLevel(resetplayer);
+		JNI_SetTouchLayout("Gameplay");
+	}
+#else
+		G_DoLoadLevel(resetplayer);
+#endif
 
 	if (netgame)
 	{
