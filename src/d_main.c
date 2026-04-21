@@ -1360,7 +1360,9 @@ void D_SRB2Main(void)
 		{
 			// use user specific config file
 #ifdef DEFAULTDIR
+#ifndef ANDROID
 			snprintf(srb2home, sizeof srb2home, "%s" PATHSEP DEFAULTDIR, userhome);
+#endif
 			snprintf(downloaddir, sizeof downloaddir, "%s" PATHSEP "DOWNLOAD", srb2home);
 			if (dedicated)
 				snprintf(configfile, sizeof configfile, "%s" PATHSEP "d"CONFIGFILENAME, srb2home);
@@ -1810,13 +1812,15 @@ const char *D_Home(void)
 {
 	const char *userhome = NULL;
 
-#ifdef ANDROID
-	return "/data/data/org.srb2/";
-#endif
 
 	if (M_CheckParm("-home") && M_IsNextParm())
 		userhome = M_GetNextParm();
 	else
+#ifdef ANDROID
+    if (I_SharedStorageLocation())
+        userhome = I_SharedStorageLocation();
+    else
+#endif
 	{
 #if !(defined (__unix__) || defined (__APPLE__) || defined (UNIXCOMMON))
 		if (FIL_FileOK(CONFIGFILENAME))
