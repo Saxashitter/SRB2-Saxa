@@ -3672,7 +3672,7 @@ void M_StartControlPanel(void)
 
 	menuactive = true;
 #ifdef __ANDROID__
-	// JNI_SetTouchControlsVisible(false);
+	JNI_SetTouchLayout("MenuNavigation");
 #endif
 
 	if (!Playing())

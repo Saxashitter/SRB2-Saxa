@@ -27,7 +27,7 @@ public class SRB2Game extends SDLActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		MasterControls masterTouchClass = new MasterControls(this);
+		masterTouchClass = new MasterControls(this, "FakeNothing");
 		mLayout.addView(masterTouchClass);
 	}
 }

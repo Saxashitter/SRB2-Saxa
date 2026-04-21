@@ -46,12 +46,15 @@ void JNI_Startup(void)
 void JNI_SetupActivity(void)
 {
 	jobject activityObject;
+	jclass localClass;
 
 	jniEnv = (JNIEnv *)SDL_AndroidGetJNIEnv();
 	(*jniEnv)->GetJavaVM(jniEnv, &jvm);
 
 	activityObject = (jobject)SDL_AndroidGetActivity();
-	activityClass = (*jniEnv)->GetObjectClass(jniEnv, activityObject);
+	localClass = (*jniEnv)->GetObjectClass(jniEnv, activityObject);
+	activityClass = (*jniEnv)->NewGlobalRef(jniEnv, localClass);
+	(*jniEnv)->DeleteLocalRef(jniEnv, localClass);
 }
 
 void JNI_SetupDeviceInfo(void)
@@ -405,32 +408,56 @@ boolean JNI_IsInMultiWindowMode(void)
 	return (multiwindow == JNI_TRUE);
 }
 
+static jobject JNI_GetMasterControls(JNIEnv *env, jclass *controlsClass)
+{
+	jfieldID field = (*env)->GetStaticFieldID(env, activityClass,
+											  "masterTouchClass", "Lorg/stjr/srb2/touch/MasterControls;");
+	if (field)
+	{
+		jobject obj = (*env)->GetStaticObjectField(env, activityClass, field);
+		if (obj)
+		{
+			*controlsClass = (*env)->GetObjectClass(env, obj);
+			return obj;
+		}
+	}
+	return NULL;
+}
+
+void JNI_SetTouchLayout(const char *layoutName)
+{
+	JNIEnv *env = JNI_GetEnv();
+	jclass controlsClass;
+	jobject controlsObj = JNI_GetMasterControls(env, &controlsClass);
+
+	if (controlsObj)
+	{
+		jmethodID mid = (*env)->GetMethodID(env, controlsClass, "setLayoutByName", "(Ljava/lang/String;)V");
+		if (mid)
+		{
+			jstring jstr = (*env)->NewStringUTF(env, layoutName);
+			(*env)->CallVoidMethod(env, controlsObj, mid, jstr);
+			(*env)->DeleteLocalRef(env, jstr);
+		}
+		(*env)->DeleteLocalRef(env, controlsClass);
+		(*env)->DeleteLocalRef(env, controlsObj);
+	}
+}
+
 void JNI_SetTouchControlsVisible(boolean visible)
 {
 	JNIEnv *env = JNI_GetEnv();
-	if (!env) return;
+	jclass controlsClass;
+	jobject controlsObj = JNI_GetMasterControls(env, &controlsClass);
 
-	// 1. Find the SRB2Game class (stored in activityClass)
-	// 2. Get the static field ID for masterTouchClass
-	jfieldID masterTouchField = (*env)->GetStaticFieldID(env, activityClass,
-														 "masterTouchClass", "Lorg/stjr/srb2/touch/MasterControls;");
-
-	if (masterTouchField) {
-		// 3. Get the TouchControls object from the static field
-		jobject controlsObj = (*env)->GetStaticObjectField(env, activityClass, masterTouchField);
-
-		if (controlsObj) {
-			// 4. Find the 'setControlsVisible' method in TouchControls class
-			jclass controlsClass = (*env)->GetObjectClass(env, controlsObj);
-			jmethodID setVisibleMid = (*env)->GetMethodID(env, controlsClass,
-														  "setControlsVisible", "(Z)V");
-
-			if (setVisibleMid) {
-				// 5. Finally, call the method!
-				(*env)->CallVoidMethod(env, controlsObj, setVisibleMid, (jboolean)visible);
-			}
-			(*env)->DeleteLocalRef(env, controlsClass);
-			(*env)->DeleteLocalRef(env, controlsObj);
+	if (controlsObj)
+	{
+		jmethodID mid = (*env)->GetMethodID(env, controlsClass, "setControlsVisible", "(Z)V");
+		if (mid)
+		{
+			(*env)->CallVoidMethod(env, controlsObj, mid, (jboolean)visible);
 		}
+		(*env)->DeleteLocalRef(env, controlsClass);
+		(*env)->DeleteLocalRef(env, controlsObj);
 	}
 }

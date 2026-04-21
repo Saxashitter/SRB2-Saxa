@@ -15,5 +15,6 @@ public class FakeNothing extends Layout {
                        0.5f, 0.5f, 0, 0, 1.0f, 1.0f, 0, 0, "", KeyEvent.KEYCODE_ENTER
                 )
         };
+        this.buttons[0].visible = false; // Hide button from screen so it really does look like nothing.
     }
 }

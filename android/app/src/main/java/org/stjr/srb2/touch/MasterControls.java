@@ -14,7 +14,7 @@ public class MasterControls extends View {
     private final Paint paint, pressedPaint, textPaint;
     private Layout currentLayout; // The active behavior
 
-    public MasterControls(Context context) {
+    public MasterControls(Context context, String layoutName) {
         super(context);
 
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -33,7 +33,27 @@ public class MasterControls extends View {
         textPaint.setTextAlign(Paint.Align.CENTER);
 
         // Start with the standard layout
-        setLayout(new MenuNavigation());
+        setLayoutByName(layoutName);
+    }
+
+    public void setLayoutByName(String layoutName) {
+        post(() -> {
+            try {
+                // Dynamically find the class in the layout package
+                String className = "org.stjr.srb2.layout." + layoutName;
+                Class<? extends Layout> layoutClass = Class.forName(className).asSubclass(Layout.class);
+
+                // Instantiate it using the default constructor
+                Layout newLayout = layoutClass.getDeclaredConstructor().newInstance();
+                setLayout(newLayout);
+            } catch (Exception e) {
+                android.util.Log.e("MasterControls", "Could not find or create layout: " + layoutName, e);
+            }
+        });
+    }
+
+    public void setControlsVisible(final boolean visible) {
+        post(() -> setVisibility(visible ? VISIBLE : GONE));
     }
 
     public void setLayout(Layout layout) {
