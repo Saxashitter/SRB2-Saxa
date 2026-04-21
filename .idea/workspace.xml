@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ca527039-ab94-45dc-8757-3555adf0f635" name="Changes" comment="Replace &quot;android/&quot; contents with files from romoney5/SRB2-edit-android" />
+    <list default="true" id="ca527039-ab94-45dc-8757-3555adf0f635" name="Changes" comment="Replace &quot;android/&quot; contents with files from romoney5/SRB2-edit-android">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/jni/src/jni_android.c" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/jni/src/jni_android.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/jni/src/jni_android.h" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/jni/src/jni_android.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/SRB2Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/SRB2Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/TouchControls.java" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/java/org/stjr/srb2/TouchControls.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/m_menu.c" beforeDir="false" afterPath="$PROJECT_DIR$/src/m_menu.c" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -36,20 +43,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/peter/StudioProjects/SRB2-Saxa&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "touch-controls",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/peter/StudioProjects/SRB2-Saxa"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\peter\StudioProjects\SRB2-Saxa\android" />
