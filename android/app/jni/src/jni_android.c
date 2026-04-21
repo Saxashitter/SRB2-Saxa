@@ -413,7 +413,7 @@ void JNI_SetTouchControlsVisible(boolean visible)
 	// 1. Find the SRB2Game class (stored in activityClass)
 	// 2. Get the static field ID for masterTouchClass
 	jfieldID masterTouchField = (*env)->GetStaticFieldID(env, activityClass,
-														 "masterTouchClass", "Lorg/stjr/srb2/touch/TouchControls;");
+														 "masterTouchClass", "Lorg/stjr/srb2/touch/MasterControls;");
 
 	if (masterTouchField) {
 		// 3. Get the TouchControls object from the static field
