@@ -23,11 +23,6 @@ opts+=-DDIRECTFULLSCREEN -DHAVE_SDL
 #include sdl/MakeCYG.cfg
 #endif #ifdef CYGWIN32
 
-# STAR NOTE: handled in xtra.mk #
-#ifndef NOHW
-#sources+=sdl/ogl_sdl.c
-#endif
-
 ifdef NOMIXER
 sources+=sdl/sdl_sound.c
 else
