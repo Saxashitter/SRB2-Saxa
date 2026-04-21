@@ -227,7 +227,10 @@ static char returnWadPath[256];
 #endif
 
 #include "../d_main.h"
+
+#ifdef ANDROID
 #include "jni_android.h"
+#endif
 
 #if !defined(NOMUMBLE) && defined(HAVE_MUMBLE)
 // Mumble context string
@@ -287,7 +290,6 @@ SDL_bool framebuffer = SDL_FALSE;
 UINT8 keyboard_started = false;
 
 #ifdef UNIXBACKTRACE
-#error Weiga
 
 static void bt_write_file(int fd, const char *string) {
 	ssize_t written = 0;
