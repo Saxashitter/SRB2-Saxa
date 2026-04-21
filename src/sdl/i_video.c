@@ -877,7 +877,9 @@ static boolean IsJoystickAccelerometer(SDL_Joystick *joy)
 static boolean CanUseAccelerometer(SDL_Joystick *joy)
 {
 	if (IsJoystickAccelerometer(joy))
-		return (!(menuactive || paused || con_destlines || chat_on || gamestate != GS_LEVEL));
+        // romoney5: disable accelerometer on android
+//		return (!(menuactive || paused || con_destlines || chat_on || gamestate != GS_LEVEL));
+        return false;
 	return true;
 }
 #endif
