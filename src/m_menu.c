@@ -2117,6 +2117,12 @@ menu_t OP_PlaystyleDef = {
 
 static void M_UpdateItemOn(void)
 {
+#ifdef __ANDROID__
+	// were on android, and stumbling upon anything in the menu makes this turn true.
+	// on pc, this isnt normally a problem. but on android, the virtual keyboard will appear and block the screen.
+	// dont do this. instead, lets let the player decide if they want the keyboard to appear
+	return;
+#endif
 	I_SetTextInputMode((currentMenu->menuitems[itemOn].status & IT_CVARTYPE) == IT_CV_STRING ||
 		(currentMenu->menuitems[itemOn].status & IT_TYPE) == IT_KEYHANDLER);
 }
