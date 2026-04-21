@@ -4,6 +4,8 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.MotionEvent;
 
+import org.libsdl.app.SDLActivity;
+
 public class Joystick extends Button {
     public Button up, down, left, right;
     public float spacing;
@@ -42,10 +44,28 @@ public class Joystick extends Button {
         right.press(!deadzone && angle > -joystickInputAngle && angle < joystickInputAngle, id);
     }
 
+    // TODO: make spacing NOT add onto radius. this sucks ass and causes inconsistencies with layout making
+    @Override
+    public boolean isPointInside(float x, float y, int w, int h) {
+        float[] pos = getXYPosition(w, h);
+        return Math.sqrt(Math.pow(x - pos[0], 2) + Math.pow(y - pos[1], 2)) <= (spacing + radius);
+    }
+
+    @Override
+    public void press(boolean activate, int id) {
+        // this doesnt actually register presses, this is only for unsticking the buttons when changed via lua
+        if (activate) return;
+
+        this.touchId = -1;
+        up.press(false, -1);
+        down.press(false, -1);
+        left.press(false, -1);
+        right.press(false, -1);
+    }
+
     @Override
     public void handleTouch(int action, float x, float y, int id, int w, int h) {
-        float[] pos = getXYPosition(w, h);
-        boolean inside = Math.sqrt(Math.pow(x - pos[0], 2) + Math.pow(y - pos[1], 2)) <= (spacing + radius);
+        boolean inside = isPointInside(x, y, w, h);
 
         if ((action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) && inside) {
             this.touchId = id;
@@ -53,11 +73,7 @@ public class Joystick extends Button {
         } else if (action == MotionEvent.ACTION_MOVE && touchId == id) {
             updateDirectionalInput(x, y, w, h, id);
         } else if ((action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_CANCEL) && touchId == id) {
-            this.touchId = -1;
-            up.press(false, -1);
-            down.press(false, -1);
-            left.press(false, -1);
-            right.press(false, -1);
+            press(false, -1);
         }
     }
 }
