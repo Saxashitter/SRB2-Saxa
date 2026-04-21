@@ -28,26 +28,25 @@ public class Gameplay extends Layout {
                     KeyEvent.KEYCODE_W,
                     KeyEvent.KEYCODE_D
             ),
-
-                    // Finally, a simple button.
-                    new Button(
-                            1f, // The X scale across the screen.
-                            1f, // The Y scale across the screen.
-                            -finalOffset - screenOffset, // The X offset for the button.
-                            -finalOffset - screenOffset, // The Y offset for the button.
-                            finalRadius, // The width of the button.
-                            "Jump",
-                            KeyEvent.KEYCODE_SPACE
-                    ),
-                    new Button(
-                            1f, // The X scale across the screen.
-                            1f, // The Y scale across the screen.
-                            -finalOffset - screenOffset - finalSpacing, // The X offset for the button.
-                            -finalOffset - screenOffset, // The Y offset for the button.
-                            finalRadius, // The width of the button.
-                            "Spin",
-                            KeyEvent.KEYCODE_SHIFT_LEFT
-                    )
+            // Finally, a simple button.
+            new Button(
+                    1f, // The X scale across the screen.
+                    1f, // The Y scale across the screen.
+                    -finalOffset - screenOffset, // The X offset for the button.
+                    -finalOffset - screenOffset, // The Y offset for the button.
+                    finalRadius, // The width of the button.
+                    "Jump",
+                    KeyEvent.KEYCODE_SPACE
+            ),
+            new Button(
+                    1f, // The X scale across the screen.
+                    1f, // The Y scale across the screen.
+                    -finalOffset - screenOffset - finalSpacing, // The X offset for the button.
+                    -finalOffset - screenOffset, // The Y offset for the button.
+                    finalRadius, // The width of the button.
+                    "Spin",
+                    KeyEvent.KEYCODE_SHIFT_LEFT
+            )
         };
     }
 }
