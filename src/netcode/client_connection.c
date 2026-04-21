@@ -1249,7 +1249,6 @@ void CL_ConnectToServer(void)
 	DEBFILE(va("waiting %d nodes\n", doomcom->numnodes));
 	G_SetGamestate(GS_WAITINGPLAYERS);
 	wipegamestate = GS_WAITINGPLAYERS;
-	JNI_SetTouchLayout("FakeNothing");
 
 
 	ClearAdminPlayers();
