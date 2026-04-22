@@ -1067,7 +1067,8 @@ void R_LoadTextures(void)
 
 	for (w = 0; w < numwadfiles; w++)
 	{
-		newtextures += R_CountTextures((UINT16)w);
+		if (W_IsFilePresent(w))
+			newtextures += R_CountTextures((UINT16)w);
 	}
 
 	// If no textures found by this point, bomb out
@@ -1078,7 +1079,8 @@ void R_LoadTextures(void)
 
 	for (i = 0, w = 0; w < numwadfiles; w++)
 	{
-		i = R_DefineTextures(i, w);
+		if (W_IsFilePresent(w))
+			i = R_DefineTextures(i, w);
 	}
 
 	R_FinishLoadingTextures(newtextures);
@@ -1120,6 +1122,9 @@ static lumpnum_t W_GetTexPatchLumpNum(const char *name)
 		{
 			lumpnum_t start = LUMPERROR;
 			lumpnum_t end = LUMPERROR;
+
+			if (!W_IsFilePresent(i))
+				continue;
 
 			switch (wadfiles[i]->type)
 			{

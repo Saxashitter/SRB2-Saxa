@@ -1353,6 +1353,7 @@ void S_InitSfxChannels(INT32 sfxVolume)
 /// ------------------------
 
 static char      music_name[7]; // up to 6-character name
+static lumpnum_t music_lump;
 static void      *music_data;
 static UINT16    music_flags;
 static boolean   music_looping;
@@ -1676,9 +1677,11 @@ void S_LoadMusicDefs(UINT16 wadnum)
 //
 void S_InitMusicDefs(void)
 {
-	UINT16 i;
-	for (i = 0; i < numwadfiles; i++)
-		S_LoadMusicDefs(i);
+	for (UINT16 i = 0; i < numwadfiles; i++)
+	{
+		if (W_IsFilePresent(i))
+			S_LoadMusicDefs(i);
+	}
 }
 
 musicdef_t **soundtestdefs = NULL;
@@ -1983,6 +1986,17 @@ static musicstack_t *S_GetMusicStackEntry(UINT16 status, boolean fromfirst, INT1
 	return NULL;
 }
 
+boolean S_CheckDeletedMusic(void)
+{
+	if (music_lump != S_GetMusicLumpNum(music_name))
+	{
+		S_StopMusic();
+		return true;
+	}
+
+	return false;
+}
+
 void S_RetainMusic(const char *mname, UINT16 mflags, boolean looping, UINT32 position, UINT16 status)
 {
 	musicstack_t *mst;
@@ -2148,12 +2162,12 @@ static boolean S_LoadMusic(const char *mname)
 	// load & register it
 	mdata = W_CacheLumpNum(mlumpnum, PU_MUSIC);
 
-
 	if (I_LoadSong(mdata, W_LumpLength(mlumpnum)))
 	{
 		strncpy(music_name, mname, 7);
 		music_name[6] = 0;
 		music_data = mdata;
+		music_lump = mlumpnum;
 		return true;
 	}
 	else
@@ -2324,6 +2338,8 @@ void S_StopMusic(void)
 	I_StopSong();
 	S_UnloadMusic(); // for now, stopping also means you unload the song
 
+	music_lump = LUMPERROR;
+
 	if (cv_closedcaptioning.value)
 	{
 		if (closedcaptions[0].s-S_sfx == sfx_None)
@@ -2430,7 +2446,7 @@ boolean S_FadeOutStopMusic(UINT32 ms)
 // Kills playing sounds at start of level,
 //  determines music if any, changes music.
 //
-void S_StartEx(boolean reset)
+void S_PlayMapMusic(boolean reset)
 {
 	if (mapmusflags & MUSIC_RELOADRESET)
 	{

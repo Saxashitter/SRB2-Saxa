@@ -143,7 +143,7 @@ static UINT16 GetWadNumFromFileNeededId(UINT8 id)
 {
 	for (UINT16 wadnum = mainwads; wadnum < numwadfiles; wadnum++)
 	{
-		if (!wadfiles[wadnum]->important)
+		if (!W_IsFilePresent(wadnum) || !wadfiles[wadnum]->important)
 			continue;
 		if (id == 0)
 			return wadnum;
@@ -176,6 +176,9 @@ UINT8 *PutFileNeeded(UINT16 firstfile)
 
 	for (size_t i = mainwads; i < numwadfiles; i++) //mainwads, otherwise we start on the first mainwad
 	{
+		if (!W_IsFilePresent(i))
+			continue;
+
 		// If it has only music/sound lumps, don't put it in the list
 		if (!wadfiles[i]->important)
 			continue;
@@ -473,12 +476,17 @@ INT32 CL_CheckFiles(void)
 
 	// Modified game handling -- check for an identical file list
 	// must be identical in files loaded AND in order
-	// Return 2 on failure -- disconnect from server
 	if (modifiedgame)
 	{
 		CONS_Debug(DBG_NETPLAY, "game is modified; only doing basic checks\n");
 		for (i = 0, j = mainwads; i < fileneedednum || j < numwadfiles;)
 		{
+			if (!W_IsFilePresent(j))
+			{
+				++j;
+				continue;
+			}
+
 			if (j < numwadfiles && !wadfiles[j]->important)
 			{
 				// Unimportant on our side.
@@ -526,6 +534,8 @@ INT32 CL_CheckFiles(void)
 			// Check in already loaded files
 			for (j = mainwads; j < numwadfiles; j++)
 			{
+				if (!W_IsFilePresent(j))
+					continue;
 				nameonly(strcpy(wadfilename, wadfiles[j]->filename));
 				if (!stricmp(wadfilename, fileneeded[i].filename) &&
 					!memcmp(wadfiles[j]->md5sum, fileneeded[i].md5sum, 16))

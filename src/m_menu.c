@@ -198,8 +198,8 @@ static huddrawlist_h luahuddrawlist_playersetup;
 //
 
 static void M_GoBack(INT32 choice);
-static void M_StopMessage(INT32 choice);
-static boolean stopstopmessage = false;
+
+boolean stopstopmessage = false;
 
 static void M_HandleServerPage(INT32 choice);
 static void M_RoomMenu(INT32 choice);
@@ -307,7 +307,6 @@ static void M_StartServer(INT32 choice);
 static void M_ServerOptions(INT32 choice);
 static void M_StartServerMenu(INT32 choice);
 static void M_ConnectMenu(INT32 choice);
-static void M_ConnectMenuModChecks(INT32 choice);
 static void M_Refresh(INT32 choice);
 static void M_Connect(INT32 choice);
 static void M_ChooseRoom(INT32 choice);
@@ -948,7 +947,7 @@ static menuitem_t MP_SplitServerMenu[] =
 static menuitem_t MP_MainMenu[] =
 {
 	{IT_HEADER, NULL, "Join a game", NULL, 0},
-	{IT_STRING|IT_CALL,       NULL, "Server browser...",     M_ConnectMenuModChecks,          12},
+	{IT_STRING|IT_CALL,       NULL, "Server browser...",     M_ConnectMenu,          12},
 	{IT_STRING|IT_KEYHANDLER, NULL, "Specify server address:", M_HandleConnectIP,    22},
 	{IT_HEADER, NULL, "Host a game", NULL, 54},
 	{IT_STRING|IT_CALL,       NULL, "Internet/LAN...",       M_StartServerMenu,      66},
@@ -4028,6 +4027,14 @@ static void M_InitCharacterDescription(INT32 i)
 
 void M_InitCharacterTables(INT32 num)
 {
+	if (!num)
+	{
+		Z_Free(description);
+		description = NULL;
+		numdescriptions = 0;
+		return;
+	}
+
 	INT32 i = numdescriptions;
 
 	description = Z_Realloc(description, sizeof(description_t) * num, PU_STATIC, NULL);
@@ -6200,7 +6207,7 @@ static void M_DrawMessageMenu(void)
 }
 
 // default message handler
-static void M_StopMessage(INT32 choice)
+void M_StopMessage(INT32 choice)
 {
 	(void)choice;
 	if (menuactive)
@@ -11490,20 +11497,6 @@ static void M_ConnectMenu(INT32 choice)
 	itemOn = 0;
 	M_UpdateItemOn();
 	M_Refresh(0);
-}
-
-static void M_ConnectMenuModChecks(INT32 choice)
-{
-	(void)choice;
-	// okay never mind we want to COMMUNICATE to the player pre-emptively instead of letting them try and then get confused when it doesn't work
-
-	if (modifiedgame)
-	{
-		M_StartMessage(M_GetText("You have add-ons loaded.\nYou won't be able to join netgames!\n\nTo play online, restart the game\nand don't load any addons.\nSRB2 will automatically add\neverything you need when you join.\n\n(Press a key)\n"),M_ConnectMenu,MM_EVENTHANDLER);
-		return;
-	}
-
-	M_ConnectMenu(-1);
 }
 
 UINT32 roomIds[NUM_LIST_ROOMS];

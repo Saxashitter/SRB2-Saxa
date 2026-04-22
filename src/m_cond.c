@@ -23,6 +23,7 @@
 
 gamedata_t *clientGamedata; // Our gamedata
 gamedata_t *serverGamedata; // Server's gamedata
+gamedata_t *serverGamedataBackup; // Saved state of the server's gamedata
 
 // Map triggers for linedef executors
 // 32 triggers, one bit each
@@ -41,8 +42,8 @@ extraemblem_t extraemblems[MAXEXTRAEMBLEMS];
 unlockable_t unlockables[MAXUNLOCKABLES];
 
 // Number of emblems and extra emblems
-INT32 numemblems = 0;
-INT32 numextraemblems = 0;
+INT32 numemblems;
+INT32 numextraemblems;
 
 // Temporary holding place for nights data for the current map
 nightsdata_t ntemprecords[MAXPLAYERS];

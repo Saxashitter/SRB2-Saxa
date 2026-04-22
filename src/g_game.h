@@ -112,6 +112,8 @@ INT32 Joy2Axis(joyaxis_e axissel);
 #define MAXPLMOVE (50)
 #define SLOWTURNTICS (6)
 
+boolean G_MapFileExists(INT16 map);
+
 // build an internal map name MAPxx from map number
 const char *G_BuildMapName(INT32 map);
 
@@ -244,6 +246,12 @@ boolean G_GetModeAttackRetryFlag(void);
 
 void G_LoadGameData(gamedata_t *data);
 void G_LoadGameSettings(void);
+
+void G_SetDefaultSaveNames(void);
+void G_SetDefaultDataStrings(void);
+
+void G_InitialState(void);
+void G_AfterFileDeletion(void);
 
 void G_SetGameModified(boolean silent);
 void G_SetUsedCheats(boolean silent);

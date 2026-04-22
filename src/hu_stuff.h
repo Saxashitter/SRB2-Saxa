@@ -100,9 +100,6 @@ void HU_LoadGraphics(void);
 void HU_LoadFontCharacters(fontdef_t *font, const char *prefix);
 void HU_SetFontProperties(fontdef_t *font, INT32 kerning, UINT32 spacewidth, UINT32 charwidth, UINT32 linespacing);
 
-// reset heads up when consoleplayer respawns.
-void HU_Start(void);
-
 boolean HU_Responder(event_t *ev);
 void HU_Ticker(void);
 void HU_Drawer(void);

@@ -638,6 +638,32 @@ static void M_ConfirmConnect(event_t *ev)
 	}
 }
 
+static void M_ConfirmAddonWarning(event_t *ev)
+{
+	if (ev->type == ev_keydown)
+	{
+		if (ev->key == ' ' || ev->key == 'y' || ev->key == KEY_ENTER || ev->key == KEY_JOY1)
+		{
+			D_RestartGame(false);
+
+			M_CopyGameData(serverGamedata, clientGamedata);
+
+			F_ReloadTitleScreenGraphics();
+
+			M_StopMessage(0);
+			menuactive = false;
+			stopstopmessage = true;
+
+			cl_mode = CL_CHECKFILES;
+		}
+		else if (ev->key == 'n' || ev->key == KEY_ESCAPE || ev->key == KEY_JOY1 + 3)
+		{
+			cl_mode = CL_ABORTED;
+			M_ClearMenus(true);
+		}
+	}
+}
+
 static const char *GetPrintableFileSize(UINT64 filesize)
 {
 	static char downloadsize[32];
@@ -751,42 +777,42 @@ static boolean CL_FinishedFileList(void)
 	{
 		return true;
 	}
-	else if (i == 3) // too many files
+	else if (i == 3 || i == 2) // too many files, or the wrong addons are loaded
 	{
-		AbortConnection();
-		M_StartMessage(M_GetText(
-			"You have too many WAD files loaded\n"
-			"to add ones the server is using.\n"
-			"Please restart SRB2 before connecting.\n\n"
-			"Press ESC\n"
-		), NULL, MM_NOTHING);
-		return false;
-	}
-	else if (i == 2) // cannot join for some reason
-	{
-		AbortConnection();
-		M_StartMessage(M_GetText(
-			"You have the wrong addons loaded.\n"
-			"\n"
-			"To play on this server, restart\n"
-			"the game and don't load any addons.\n"
-			"SRB2 will automatically add\n"
-			"everything you need when you join.\n"
-			"\n"
-			"Press ESC\n"
-		), NULL, MM_NOTHING);
-		return false;
+		const char *message;
+		if (i == 3)
+		{
+			message = M_GetText(
+				"You have too many addons loaded\n"
+				"to add ones the server is using.\n\n"
+				"To play on this server, the game\n"
+				"will unload your current\n"
+				"addons before you join.\n\n"
+				"Press ENTER to continue\nor ESC to cancel\n"
+			);
+		}
+		else
+		{
+			message = M_GetText(
+				"You have the wrong addons loaded.\n\n"
+				"To play on this server, the game\n"
+				"will unload your current\n"
+				"addons before you join.\n\n"
+				"Press ENTER to continue\nor ESC to cancel\n"
+			);
+		}
+		M_StartMessage(message, M_ConfirmAddonWarning, MM_EVENTHANDLER);
+		cl_mode = CL_CONFIRMCONNECT;
+		curfadevalue = 0;
 	}
 	else if (i == 1)
 	{
 		if (serverisfull)
 		{
 			M_StartMessage(M_GetText(
-				"This server is full!\n"
-				"\n"
-				"You may load server addons (if any), and wait for a slot.\n"
-				"\n"
-				"Press ENTER to continue\nor ESC to cancel.\n\n"
+				"This server is full!\n\n"
+				"You may load server addons (if any), and wait for a slot.\n\n"
+				"Press ENTER to continue\nor ESC to cancel\n"
 			), M_ConfirmConnect, MM_EVENTHANDLER);
 			cl_mode = CL_CONFIRMCONNECT;
 			curfadevalue = 0;

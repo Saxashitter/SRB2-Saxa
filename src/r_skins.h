@@ -109,6 +109,7 @@ INT32 R_SkinAvailable(const char *name);
 INT32 R_GetForcedSkin(INT32 playernum);
 void R_AddSkins(UINT16 wadnum, boolean mainfile);
 void R_PatchSkins(UINT16 wadnum, boolean mainfile);
+void R_DelSkins(void);
 
 UINT16 P_GetStateSprite2(state_t *state);
 UINT16 P_GetSprite2StateFrame(state_t *state);

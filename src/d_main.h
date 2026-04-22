@@ -37,6 +37,8 @@ void D_SRB2Loop(void) FUNCNORETURN;
 // If not overrided by user input, calls D_AdvanceDemo.
 //
 void D_SRB2Main(void);
+void D_RestartGame(boolean remove_all_addons);
+void D_ReloadFiles(void);
 
 // Called by IO functions when input is detected.
 void D_PostEvent(const event_t *ev);

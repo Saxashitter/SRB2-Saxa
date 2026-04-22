@@ -154,7 +154,7 @@ static void Midiplayer_Onchange(void)
 #endif
 
 	if (restart)
-		S_StartEx(true);
+		S_PlayMapMusic(true);
 }
 
 static void MidiSoundfontPath_Onchange(void)
@@ -192,7 +192,7 @@ static void MidiSoundfontPath_Onchange(void)
 			if (!Mix_SetSoundFonts(cv_midisoundfontpath.string))
 				CONS_Alert(CONS_ERROR, "Sound font error: %s\n", Mix_GetError());
 			else
-				S_StartEx(true);
+				S_PlayMapMusic(true);
 		}
 	}
 }

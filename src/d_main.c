@@ -85,7 +85,8 @@
 #endif
 
 #ifdef HWRENDER
-#include "hardware/hw_main.h" // 3D View Rendering
+#include "hardware/hw_main.h"
+#include "hardware/hw_glob.h"
 #endif
 
 #ifdef _WINDOWS
@@ -141,6 +142,9 @@ menucolor_t *menucolorhead, *menucolortail;
 
 char savegamename[256];
 char liveeventbackup[256];
+
+char basesavegamename[256];
+char baseliveeventbackup[256];
 
 char srb2home[256] = ".";
 char srb2path[256] = ".";
@@ -1397,6 +1401,9 @@ void D_SRB2Main(void)
 		configfile[sizeof configfile - 1] = '\0';
 	}
 
+	strcpy(basesavegamename, savegamename);
+	strcpy(baseliveeventbackup, liveeventbackup);
+
 	// Create addons dir
 	snprintf(addonsdir, sizeof addonsdir, "%s%s%s", srb2home, PATHSEP, "addons");
 	I_mkdir(addonsdir, 0755);
@@ -1810,6 +1817,65 @@ void D_SRB2Main(void)
 		if (!P_LoadLevel(false, false))
 			I_Quit(); // fail so reset game stuff
 	}
+}
+
+// Reload all files.
+void D_ReloadFiles(void)
+{
+	game_reloading = true;
+
+	// Set the initial state
+	G_InitialState();
+
+	// Free textures
+	R_FlushTextureCache();
+
+	numtextures = 0;
+
+	// Unload the level
+	P_UnloadLevel();
+
+	// Free patches
+	Patch_FreeTag(PU_PATCH);
+	Patch_FreeTag(PU_PATCH_LOWPRIORITY);
+	Patch_FreeTag(PU_PATCH_ROTATED);
+	Patch_FreeTag(PU_SPRITE);
+
+	// Reinit the palette remaps
+	PaletteRemap_Init();
+
+	// Load SOC and Lua.
+	for (INT32 i = 0; i < numwadfiles; i++)
+	{
+		if (W_IsFilePresent(i))
+			W_LoadFileScripts(i, i < mainwads);
+	}
+
+	// Reload textures and sprites.
+	R_LoadTextures();
+	R_InitSprites();
+	R_ReInitColormaps(0);
+
+	// Reload ANIMATED / ANIMDEFS
+	P_InitPicAnims();
+
+	// Flush and reload HUD graphics
+	HU_LoadGraphics();
+	ST_LoadGraphics();
+	ST_ReloadSkinFaceGraphics();
+
+	game_reloading = false;
+}
+
+void D_RestartGame(boolean remove_all_addons)
+{
+	G_SaveGameData(clientGamedata);
+
+	W_ClearCachedData();
+	W_UnloadAddons(remove_all_addons);
+	D_ReloadFiles();
+
+	G_LoadGameData(clientGamedata);
 }
 
 const char *D_Home(void)

@@ -445,7 +445,10 @@ void HWR_LoadAllCustomShaders(void)
 
 	// read every custom shader
 	for (i = 0; i < numwadfiles; i++)
-		HWR_LoadCustomShadersFromFile(i, W_FileHasFolders(wadfiles[i]));
+	{
+		if (W_IsFilePresent(i))
+			HWR_LoadCustomShadersFromFile(i, W_FileHasFolders(wadfiles[i]));
+	}
 }
 
 static const char version_directives[][14] = {

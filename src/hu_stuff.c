@@ -78,12 +78,10 @@ patch_t *ttlnum[10]; // act numbers (0-9)
 patch_t *tallminus;
 patch_t *tallinfin;
 
-static player_t *plr;
 boolean chat_on; // entering a chat message?
 boolean chat_on_first_event; // blocker for first chat input event
 static char w_chat[HU_MAXMSGLEN + 1];
 static size_t c_input = 0; // let's try to make the chat input less shitty.
-static boolean headsupactive = false;
 boolean hu_showscores; // draw rankings
 static char hu_tick;
 
@@ -302,24 +300,6 @@ void HU_Init(void)
 	shiftxform = english_shiftxform;
 
 	luahuddrawlist_scores = LUA_HUD_CreateDrawList();
-}
-
-static inline void HU_Stop(void)
-{
-	headsupactive = false;
-}
-
-//
-// Reset Heads up when consoleplayer spawns
-//
-void HU_Start(void)
-{
-	if (headsupactive)
-		HU_Stop();
-
-	plr = &players[consoleplayer];
-
-	headsupactive = true;
 }
 
 //======================================================================

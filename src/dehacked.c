@@ -194,7 +194,7 @@ static void DEH_LoadDehackedFile(MYFILE *f, boolean mainfile)
 
 	if (!deh_loaded)
 	{
-		initfreeslots();
+		DEH_Init();
 		deh_loaded = true;
 	}
 
@@ -571,10 +571,10 @@ static void DEH_LoadDehackedFile(MYFILE *f, boolean mainfile)
 					}
 
 					if (clearall || fastcmp(word2, "CONDITIONSETS"))
-						clear_conditionsets();
+						P_ClearConditionSets();
 
 					if (clearall || fastcmp(word2, "LEVELS"))
-						clear_levels();
+						P_ClearLevels();
 				}
 				else
 					deh_warning("Unknown word: %s", word);
@@ -587,7 +587,12 @@ static void DEH_LoadDehackedFile(MYFILE *f, boolean mainfile)
 	} // end while
 
 	if (gamedataadded)
+	{
 		G_LoadGameData(clientGamedata);
+
+		serverGamedataBackup = M_NewGameDataStruct();
+		M_CopyGameData(serverGamedataBackup, serverGamedata);
+	}
 
 	if (gamestate == GS_TITLESCREEN)
 	{
@@ -611,6 +616,7 @@ static void DEH_LoadDehackedFile(MYFILE *f, boolean mainfile)
 	}
 
 	dbg_line = -1;
+
 	if (deh_num_warning)
 	{
 		CONS_Printf(M_GetText("%d warning%s in the SOC lump\n"), deh_num_warning, deh_num_warning == 1 ? "" : "s");
@@ -639,4 +645,11 @@ void DEH_LoadDehackedLumpPwad(UINT16 wad, UINT16 lump, boolean mainfile)
 void DEH_LoadDehackedLump(lumpnum_t lumpnum)
 {
 	DEH_LoadDehackedLumpPwad(WADFILENUM(lumpnum),LUMPNUM(lumpnum), false);
+}
+
+void DEH_Init(void)
+{
+	deh_loaded = false;
+
+	initfreeslots();
 }

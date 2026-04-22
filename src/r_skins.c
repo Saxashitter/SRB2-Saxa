@@ -20,6 +20,7 @@
 #include "z_zone.h"
 #include "m_menu.h"
 #include "m_misc.h"
+#include "m_menu.h"
 #include "info.h" // spr2names
 #include "i_video.h" // rendermode
 #include "i_system.h"
@@ -1080,6 +1081,22 @@ next_token:
 #undef HUDNAMEWRITE
 #undef SYMBOLCONVERT
 
+void R_DelSkins(void)
+{
+	for (int i = 0; i < numskins; i++)
+	{
+		ST_UnLoadFaceGraphics(i);
+		Z_Free(skins[i]);
+	}
+
+	Z_Free(skins);
+
+	skins = NULL;
+	numskins = 0;
+
+	M_InitCharacterTables(0);
+}
+
 static UINT16 W_CheckForEitherSkinMarkerInPwad(UINT16 wadid, UINT16 startlump)
 {
 	UINT16 i;
@@ -1219,7 +1236,8 @@ void R_RefreshSprite2(void)
 
 	for (i = 0; i < numwadfiles; i++)
 	{
-		R_RefreshSprite2ForWad(i, old_spr2);
+		if (W_IsFilePresent(i))
+			R_RefreshSprite2ForWad(i, old_spr2);
 	}
 
 	// Update previous value.

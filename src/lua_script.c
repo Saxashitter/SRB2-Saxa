@@ -553,18 +553,27 @@ static int setglobals(lua_State *L)
 	return luaL_error(L, "Implicit global " LUA_QS " prevented. Create a local variable instead.", csname);
 }
 
+// Clear the Lua state
+void LUA_Shutdown(void)
+{
+	if (gL)
+	{
+		LUA_ClearHooks();
+		lua_close(gL);
+	}
+
+	gL = NULL;
+}
+
 // Clear and create a new Lua state, laddo!
 // There's SCRIPTIN to be had!
-static void LUA_ClearState(void)
+void LUA_ClearState(void)
 {
 	lua_State *L;
 	int i;
 
 	// close previous state
-	if (gL)
-		lua_close(gL);
-	gL = NULL;
-
+	LUA_Shutdown();
 	CONS_Printf(M_GetText("Pardon me while I initialize the Lua scripting interface...\n"));
 
 	// allocate state
@@ -624,7 +633,8 @@ static inline boolean LUA_LoadFile(MYFILE *f, char *name)
 	if (!name)
 		name = wadfiles[f->wad]->filename;
 
-	CONS_Printf("Loading Lua script from %s\n", name);
+	if (!game_reloading)
+		CONS_Printf("Loading Lua script from %s\n", name);
 
 	if (!gL) // Lua needs to be initialized
 		LUA_ClearState();

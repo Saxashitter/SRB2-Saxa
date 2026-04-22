@@ -720,7 +720,8 @@ void R_AddSpriteDefs(UINT16 wadnum)
 	if (spritesadded || framesadded)
 	{
 		nameonly(strcpy(wadname, wadfiles[wadnum]->filename));
-		CONS_Printf(M_GetText("%s added %s frames in %s sprites\n"), wadname, sizeu1(framesadded), sizeu2(spritesadded));
+		if (!game_reloading)
+			CONS_Printf(M_GetText("%s added %s frames in %s sprites\n"), wadname, sizeu1(framesadded), sizeu2(spritesadded));
 	}
 }
 
@@ -766,11 +767,17 @@ void R_InitSprites(void)
 	if (!numsprites)
 		I_Error("R_AddSpriteDefs: no sprites in namelist\n");
 
+	if (sprites)
+		Z_Free(sprites);
+
 	sprites = Z_Calloc(numsprites * sizeof (*sprites), PU_STATIC, NULL);
 
 	// find sprites in each -file added pwad
 	for (i = 0; i < numwadfiles; i++)
-		R_AddSpriteDefs((UINT16)i);
+	{
+		if (W_IsFilePresent(i))
+			R_AddSpriteDefs((UINT16)i);
+	}
 
 	//
 	// now check for skins
@@ -780,16 +787,13 @@ void R_InitSprites(void)
 	R_InitSkins();
 	for (i = 0; i < numwadfiles; i++)
 	{
+		if (!W_IsFilePresent(i))
+			continue;
 		R_AddSkins((UINT16)i, true);
 		R_PatchSkins((UINT16)i, true);
 		R_LoadSpriteInfoLumps(i, wadfiles[i]->numlumps);
 	}
 	ST_ReloadSkinFaceGraphics();
-
-#ifdef HWRENDER
-	if (rendermode == render_opengl)
-		HWR_LoadModels();
-#endif
 }
 
 //
