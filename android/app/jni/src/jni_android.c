@@ -411,6 +411,11 @@ int JNI_GetGameHeight(void)
 	return vid.height;
 }
 
+int JNI_GetGameDup(void)
+{
+	return vid.dup;
+}
+
 JNIEXPORT jint JNICALL Java_org_stjr_srb2_SRB2Game_nativeGetGameWidth(JNIEnv* env, jclass cls)
 {
 	return vid.width;
@@ -419,6 +424,11 @@ JNIEXPORT jint JNICALL Java_org_stjr_srb2_SRB2Game_nativeGetGameWidth(JNIEnv* en
 JNIEXPORT jint JNICALL Java_org_stjr_srb2_SRB2Game_nativeGetGameHeight(JNIEnv* env, jclass cls)
 {
 	return vid.height;
+}
+
+JNIEXPORT jint JNICALL Java_org_stjr_srb2_SRB2Game_nativeGetGameDup(JNIEnv* env, jclass cls)
+{
+	return vid.dup;
 }
 
 boolean JNI_IsInMultiWindowMode(void)

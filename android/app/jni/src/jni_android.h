@@ -71,6 +71,7 @@ void JNI_DisplayToast(const char *text);
 
 int JNI_GetGameWidth(void);
 int JNI_GetGameHeight(void);
+int JNI_GetGameDup(void);
 
 boolean JNI_IsInMultiWindowMode(void);
 

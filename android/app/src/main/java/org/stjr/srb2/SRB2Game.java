@@ -22,11 +22,13 @@ public class SRB2Game extends SDLActivity {
 
 	public static int gameWidth = 320;
 	public static int gameHeight = 200;
+	public static int gameDup = 1;
 
 	private final Handler updateHandler = new Handler();
 
 	public static native int nativeGetGameWidth();
 	public static native int nativeGetGameHeight();
+	public static native int nativeGetGameDup();
 
 	public static boolean checkPermission(String permission) {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
@@ -47,19 +49,21 @@ public class SRB2Game extends SDLActivity {
 		public void run() {
 			int newWidth = nativeGetGameWidth();
 			int newHeight = nativeGetGameHeight();
+			int newDup = nativeGetGameDup();
 
-			if (newWidth != gameWidth || newHeight != gameHeight) {
+			if (newWidth != gameWidth || newHeight != gameHeight || newDup != gameDup) {
 				gameWidth = newWidth;
 				gameHeight = newHeight;
-				onGameResolutionChanged(gameWidth, gameHeight);
+				gameDup = newDup;
+				onGameResolutionChanged(gameWidth, gameHeight, gameDup);
 			}
 
 			updateHandler.postDelayed(this, 200);
 		}
 	};
 
-	protected void onGameResolutionChanged(int width, int height) {
-		Log.d("SRB2", "Resolution changed");
+	protected void onGameResolutionChanged(int width, int height, int dup) {
+		Log.d("SRB2", "Resolution changed: " + width + "x" + height + " (dup: " + dup + ")");
 
 		int screenW = mLayout.getWidth();
 		int screenH = mLayout.getHeight();
@@ -67,20 +71,22 @@ public class SRB2Game extends SDLActivity {
 		if (screenW == 0 || screenH == 0 || width == 0 || height == 0)
 			return;
 
-		float scale = Math.min(
-				(float) screenH / (float) height,
-				(float) screenW / (float) width
+		float screenScale = Math.min(
+				(float) screenW / width,
+				(float) screenH / height
 		);
 
-		int rectW = (int) (width * scale);
-		int rectH = (int) (height * scale);
+		int rectW = (int) (width * screenScale);
+		int rectH = (int) (height * screenScale);
 
 		int left = (screenW - rectW) / 2;
 		int top = (screenH - rectH) / 2;
 
 		Rect hole = new Rect(left, top, left + rectW, top + rectH);
 
-		gameBorder.setHole(hole);
+		if (gameBorder != null) {
+			gameBorder.setHole(hole);
+		}
 	}
 
 	@Override
