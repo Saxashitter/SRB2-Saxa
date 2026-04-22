@@ -146,7 +146,7 @@ void W_UnloadFile(wadfile_t *wad)
 		if (lumpcache[wad->numlumps])
 			Z_Free(lumpcache[wad->numlumps]);
 		if (patchcache[wad->numlumps])
-			Z_Free(patchcache[wad->numlumps]);
+            Patch_Free((patch_t *)patchcache[wad->numlumps]);
 		if (lumpinfo[wad->numlumps].diskpath)
 			Z_Free(lumpinfo[wad->numlumps].diskpath);
 		Z_Free(lumpinfo[wad->numlumps].longname);
