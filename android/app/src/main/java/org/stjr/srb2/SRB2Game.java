@@ -30,6 +30,21 @@ public class SRB2Game extends SDLActivity {
 	public static native int nativeGetGameHeight();
 	public static native int nativeGetGameDup();
 
+	public static void updateBorderImage(final byte[] data) {
+		mSingleton.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if (gameBorder != null && data != null) {
+					Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+					if (bitmap != null) {
+						gameBorder.setBorderBitmap(bitmap);
+						Log.d("SRB2", "Border updated from addon");
+					}
+				}
+			}
+		});
+	}
+
 	public static boolean checkPermission(String permission) {
 		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
 			return true;

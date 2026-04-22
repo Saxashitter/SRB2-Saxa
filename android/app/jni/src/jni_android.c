@@ -431,6 +431,24 @@ JNIEXPORT jint JNICALL Java_org_stjr_srb2_SRB2Game_nativeGetGameDup(JNIEnv* env,
 	return vid.dup;
 }
 
+void JNI_UpdateBorder(void *data, size_t size)
+{
+	JNIEnv *env = JNI_GetEnv();
+	jclass srb2GameClass = (*env)->FindClass(env, "org/stjr/srb2/SRB2Game");
+	if (srb2GameClass)
+	{
+		jmethodID mid = (*env)->GetStaticMethodID(env, srb2GameClass, "updateBorderImage", "([B)V");
+		if (mid)
+		{
+			jbyteArray byteArray = (*env)->NewByteArray(env, size);
+			(*env)->SetByteArrayRegion(env, byteArray, 0, size, (jbyte *)data);
+			(*env)->CallStaticVoidMethod(env, srb2GameClass, mid, byteArray);
+			(*env)->DeleteLocalRef(env, byteArray);
+		}
+		(*env)->DeleteLocalRef(env, srb2GameClass);
+	}
+}
+
 boolean JNI_IsInMultiWindowMode(void)
 {
 	JNIEnv *env = JNI_GetEnv();

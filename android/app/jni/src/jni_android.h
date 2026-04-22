@@ -73,6 +73,8 @@ int JNI_GetGameWidth(void);
 int JNI_GetGameHeight(void);
 int JNI_GetGameDup(void);
 
+void JNI_UpdateBorder(void *data, size_t size);
+
 boolean JNI_IsInMultiWindowMode(void);
 
 #endif

@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 
 public class Border extends View {
-
     private Rect gameRect;
     private Bitmap bitmap;
     private Rect positionRect;
@@ -48,6 +47,12 @@ public class Border extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         setupBorderPositions(w, h);
+    }
+
+    public void setBorderBitmap(Bitmap bitmap) {
+        this.bitmap = bitmap;
+        setupBorderPositions(getWidth(), getHeight());
+        invalidate();
     }
 
     public void setHole(Rect gameRect) {
