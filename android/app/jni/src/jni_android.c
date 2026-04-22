@@ -12,6 +12,7 @@
 
 #include "jni_android.h"
 #include "SDL.h"
+#include "../../../../src/screen.h" // lol
 
 static JavaVM *jvm = NULL;
 static JNIEnv *jniEnv = NULL;
@@ -398,6 +399,26 @@ const char *JNI_GetWriteExternalStoragePermission(void)
 void JNI_DisplayToast(const char *text)
 {
 	SDL_AndroidShowToast(text, 1, -1, 0, 0);
+}
+
+int JNI_GetGameWidth(void)
+{
+	return vid.width;
+}
+
+int JNI_GetGameHeight(void)
+{
+	return vid.height;
+}
+
+JNIEXPORT jint JNICALL Java_org_stjr_srb2_SRB2Game_nativeGetGameWidth(JNIEnv* env, jclass cls)
+{
+	return vid.width;
+}
+
+JNIEXPORT jint JNICALL Java_org_stjr_srb2_SRB2Game_nativeGetGameHeight(JNIEnv* env, jclass cls)
+{
+	return vid.height;
 }
 
 boolean JNI_IsInMultiWindowMode(void)
