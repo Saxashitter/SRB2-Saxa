@@ -16,11 +16,15 @@ public abstract class Layout {
         }
     }
 
-    public void handleTouch(int action, float x, float y, int id, int w, int h) {
-        if (buttons == null) return;
+    public boolean handleTouch(int action, float x, float y, int id, int w, int h) {
+        if (buttons == null) return false;
+        boolean pressed = false;
         for (Button b : buttons) {
-            b.handleTouch(action, x, y, id, w, h);
+            if (b.handleTouch(action, x, y, id, w, h))
+                pressed = true;
         }
+
+        return pressed;
     }
 
     public void releaseAll() {

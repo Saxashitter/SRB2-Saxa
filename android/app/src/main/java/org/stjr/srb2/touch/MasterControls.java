@@ -4,17 +4,21 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 // CONTROL SCHEMES
 import org.stjr.srb2.layout.MenuNavigation;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class MasterControls extends View {
     private final Paint paint, pressedPaint, textPaint;
     private Layout currentLayout; // The active behavior
     private String currentLayoutName;
-
+    private final Map<Integer, Boolean> currentPressedIDs = new HashMap<>();
     // Initalizes controls and gets control layout.
     public MasterControls(Context context, String layoutName) {
         super(context);
@@ -88,21 +92,43 @@ public class MasterControls extends View {
         int action = event.getActionMasked();
         int width = getWidth();
         int height = getHeight();
+        boolean pressed = false;
 
         // Standard logic forwarded to currentLayout
         if (action == MotionEvent.ACTION_MOVE) {
+            float mouseX = 0, mouseY = 0;
+            boolean anyTouchHandled = false;
+
             for (int i = 0; i < event.getPointerCount(); i++) {
-                currentLayout.handleTouch(action, event.getX(i), event.getY(i),
-                        event.getPointerId(i), width, height);
+                float x = event.getX(i);
+                float y = event.getY(i);
+                int id = event.getPointerId(i);
+
+                if (currentLayout.handleTouch(action, x, y, id, width, height)) {
+                    anyTouchHandled = true;
+                } else if (!currentPressedIDs.containsKey(id)) {
+                    org.libsdl.app.SDLActivity.onNativeMouse(0, MotionEvent.ACTION_HOVER_MOVE, x, y, true);
+                    Log.d("SRB2", "Turn camera");
+                }
             }
-        } else {
+            pressed = true;
+        }
+        else {
             int idx = event.getActionIndex();
-            currentLayout.handleTouch(action, event.getX(idx), event.getY(idx),
-                    event.getPointerId(idx), width, height);
+            if (currentLayout.handleTouch(action, event.getX(idx), event.getY(idx), event.getPointerId(idx), width, height)) {
+                pressed = true;
+                if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
+                    currentPressedIDs.put(event.getPointerId(idx), true);
+
+                }
+            }
+
+            if ((action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_CANCEL))
+                currentPressedIDs.remove(event.getPointerId(idx));
         }
 
         invalidate();
-        return true;
+        return pressed;
     }
 
     @Override

@@ -49,7 +49,7 @@ public class Button {
         }
     }
 
-    public void handleTouch(int action, float x, float y, int id, int w, int h) {
+    public boolean handleTouch(int action, float x, float y, int id, int w, int h) {
         boolean inside = isPointInside(x, y, w, h);
 
         if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
@@ -58,7 +58,8 @@ public class Button {
                 Log.i("TouchButton", "Pressed (HARD): " + id);
             }
         } else if (action == MotionEvent.ACTION_MOVE) {
-            if (this.touchId == id) {
+            if (this.touchId == id && !inside && this.inputDown) {
+                press(false, id);
                 // If it's OUR finger moving, we can check if it slid OUT (optional)
                 // For now, let's just make sure we don't react to OTHER fingers moving
             } else if (this.touchId == -1 && inside && !this.inputDown) {
@@ -72,6 +73,7 @@ public class Button {
                 Log.i("TouchButton", "Released: " + id);
             }
         }
+        return inside;
     }
 
     public void draw(Canvas canvas, Paint paint, Paint pressedPaint, Paint textPaint) {

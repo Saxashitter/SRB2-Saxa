@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.util.LruCache;
+import android.view.MotionEvent;
 
 public class SRB2Game extends SDLActivity {
 	public static MasterControls masterTouchClass;
@@ -163,7 +164,6 @@ public class SRB2Game extends SDLActivity {
 	static void resetBorder() {
 		gameBorder.resetBitmap();
 	}
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

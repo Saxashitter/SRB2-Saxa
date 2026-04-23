@@ -4,8 +4,6 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.MotionEvent;
 
-import org.libsdl.app.SDLActivity;
-
 public class Joystick extends Button {
     public Button up, down, left, right;
     public float spacing;
@@ -64,7 +62,7 @@ public class Joystick extends Button {
     }
 
     @Override
-    public void handleTouch(int action, float x, float y, int id, int w, int h) {
+    public boolean handleTouch(int action, float x, float y, int id, int w, int h) {
         boolean inside = isPointInside(x, y, w, h);
 
         if ((action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) && inside) {
@@ -75,5 +73,6 @@ public class Joystick extends Button {
         } else if ((action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_CANCEL) && touchId == id) {
             press(false, -1);
         }
+        return inside;
     }
 }
