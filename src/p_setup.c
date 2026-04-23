@@ -8454,18 +8454,6 @@ static boolean P_LoadAddon(UINT16 numlumps)
 		CONS_Printf(M_GetText("No maps added\n"));
 
 	R_LoadSpriteInfoLumps(wadnum, numlumps);
-
-#ifdef __ANDROID__
-	// temporary test
-	UINT16 borderlump = W_CheckNumForFullNamePK3("ANDROIDBORDER.png", wadnum, 0);
-	if (borderlump != INT16_MAX)
-	{
-		void *data = W_CacheLumpNumPwad(wadnum, borderlump, PU_CACHE);
-		size_t size = W_LumpLengthPwad(wadnum, borderlump);
-		JNI_UpdateBorder(data, size);
-	}
-#endif
-
 #ifdef HWRENDER
 	HWR_ReloadModels();
 #endif

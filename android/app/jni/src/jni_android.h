@@ -73,7 +73,10 @@ int JNI_GetGameWidth(void);
 int JNI_GetGameHeight(void);
 int JNI_GetGameDup(void);
 
-void JNI_UpdateBorder(void *data, size_t size);
+void JNI_UpdateBorder(const char *name, void *data, size_t size);
+int JNI_SetLetterboxBorder(const char *name);
+const char *JNI_GetLetterboxBorder(void);
+void JNI_ResetLetterboxBorder();
 
 boolean JNI_IsInMultiWindowMode(void);
 

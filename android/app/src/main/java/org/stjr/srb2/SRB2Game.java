@@ -12,17 +12,19 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.util.LruCache;
 
 public class SRB2Game extends SDLActivity {
 	public static MasterControls masterTouchClass;
 
 	public static Border gameBorder;
 
-	public static int gameWidth = 320;
-	public static int gameHeight = 200;
-	public static int gameDup = 1;
+	public static int gameWidth = 0;
+	public static int gameHeight = 0;
+	public static int gameDup = 0;
+
+	private int lastLayoutWidth = 0;
+	private int lastLayoutHeight = 0;
 
 	private final Handler updateHandler = new Handler();
 
@@ -30,16 +32,60 @@ public class SRB2Game extends SDLActivity {
 	public static native int nativeGetGameHeight();
 	public static native int nativeGetGameDup();
 
-	public static void updateBorderImage(final byte[] data) {
+	private static LruCache<String, Bitmap> borderCache;
+
+	static {
+		// Use 1/8th of available memory for the cache
+		final int maxMemory = (int) (Runtime.getRuntime().maxMemory() / 1024);
+		final int cacheSize = maxMemory / 8;
+
+		borderCache = new LruCache<String, Bitmap>(cacheSize) {
+			@Override
+			protected int sizeOf(String key, Bitmap bitmap) {
+				return bitmap.getByteCount() / 1024;
+			}
+		};
+	}
+
+	public static void preloadBorderImage(final String name, final byte[] data) {
 		mSingleton.runOnUiThread(new Runnable() {
 			@Override
 			public void run() {
-				if (gameBorder != null && data != null) {
-					Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+				if (gameBorder == null) return;
+
+				// Check cache first
+				Bitmap bitmap = borderCache.get(name);
+
+				if (bitmap == null && data != null) {
+					// Not in cache, decode it
+					bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
 					if (bitmap != null) {
-						gameBorder.setBorderBitmap(bitmap);
-						Log.d("SRB2", "Border updated from addon");
+						borderCache.put(name, bitmap);
 					}
+				}
+			}
+		});
+	}
+
+	public static void updateBorderImage(final String name, final byte[] data) {
+		mSingleton.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				if (gameBorder == null) return;
+
+				// Check cache first
+				Bitmap bitmap = borderCache.get(name);
+
+				if (bitmap == null && data != null) {
+					// Not in cache, decode it
+					bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+					if (bitmap != null) {
+						borderCache.put(name, bitmap);
+					}
+				}
+
+				if (bitmap != null) {
+					gameBorder.setBorderBitmap(bitmap);
 				}
 			}
 		});
@@ -66,11 +112,21 @@ public class SRB2Game extends SDLActivity {
 			int newHeight = nativeGetGameHeight();
 			int newDup = nativeGetGameDup();
 
-			if (newWidth != gameWidth || newHeight != gameHeight || newDup != gameDup) {
-				gameWidth = newWidth;
-				gameHeight = newHeight;
-				gameDup = newDup;
-				onGameResolutionChanged(gameWidth, gameHeight, gameDup);
+			int curLayoutW = mLayout != null ? mLayout.getWidth() : 0;
+			int curLayoutH = mLayout != null ? mLayout.getHeight() : 0;
+
+			if (newWidth != gameWidth || newHeight != gameHeight || newDup != gameDup
+					|| curLayoutW != lastLayoutWidth || curLayoutH != lastLayoutHeight) {
+				
+				onGameResolutionChanged(newWidth, newHeight, newDup);
+
+				if (curLayoutW > 0 && curLayoutH > 0 && newWidth > 0 && newHeight > 0) {
+					gameWidth = newWidth;
+					gameHeight = newHeight;
+					gameDup = newDup;
+					lastLayoutWidth = curLayoutW;
+					lastLayoutHeight = curLayoutH;
+				}
 			}
 
 			updateHandler.postDelayed(this, 200);
@@ -102,6 +158,10 @@ public class SRB2Game extends SDLActivity {
 		if (gameBorder != null) {
 			gameBorder.setHole(hole);
 		}
+	}
+
+	static void resetBorder() {
+		gameBorder.resetBitmap();
 	}
 
 	@Override

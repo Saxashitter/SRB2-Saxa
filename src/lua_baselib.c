@@ -4382,6 +4382,38 @@ static int lib_jniGetTouchVisible(lua_State *L) {
 	lua_pushboolean(L, JNI_GetTouchVisible());
 	return 1;
 }
+
+static int lib_jniSetLetterboxBorder(lua_State *L) {
+	const char * pngGraphic = luaL_checkstring(L, 1);
+
+	if (pngGraphic == NULL)
+		return luaL_error(L,"JNI_SetLetterboxBorder needs to have a graphic name.");
+	if (JNI_SetLetterboxBorder(pngGraphic) == false)
+		return luaL_error(L, "JNI_SetLetterboxBorder graphic not valid.");
+
+	return 1;
+}
+
+static int lib_jniPreloadLetterboxBorder(lua_State *L) {
+	const char * pngGraphic = luaL_checkstring(L, 1);
+
+	if (pngGraphic == NULL)
+		return luaL_error(L,"JNI_ResetLetterboxBorder needs to have a graphic name.");
+	JNI_ResetLetterboxBorder(pngGraphic);
+
+	return 1;
+}
+
+static int lib_jniGetLetterboxBorder(lua_State *L) {
+	lua_pushstring(L, JNI_GetLetterboxBorder());
+	return 1;
+}
+
+static int lib_jniResetLetterboxBorder(lua_State *L)
+{
+	JNI_ResetLetterboxBorder();
+	return 1;
+}
 #endif
 
 static luaL_Reg lib[] = {
@@ -4694,10 +4726,18 @@ static luaL_Reg lib[] = {
 
 	// ANDROID EXCLUSIVE
 #ifdef __ANDROID__
+	// Touch-related
 	{"JNI_SetTouchLayout",lib_jniSetTouchLayout},
 	{"JNI_SetTouchVisible",lib_jniSetTouchVisible},
 	{"JNI_GetTouchLayout",lib_jniGetTouchLayout},
 	{"JNI_GetTouchVisible",lib_jniGetTouchVisible},
+
+	// Letterbox related
+	{"JNI_SetLetterboxBorder",lib_jniSetLetterboxBorder},
+	{"JNI_GetLetterboxBorder",lib_jniGetLetterboxBorder},
+	{"JNI_PreloadLetterboxBorder",lib_jniPreloadLetterboxBorder},
+	{"JNI_ResetLetterboxBorder",lib_jniResetLetterboxBorder},
+
 #endif
 
 	{NULL, NULL}

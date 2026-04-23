@@ -13,6 +13,8 @@
 #include "jni_android.h"
 #include "SDL.h"
 #include "../../../../src/screen.h" // lol
+#include "../../../../src/w_wad.h" // 2nd lol
+#include "../../../../src/z_zone.h" // 3rd lol
 
 static JavaVM *jvm = NULL;
 static JNIEnv *jniEnv = NULL;
@@ -431,19 +433,16 @@ JNIEXPORT jint JNICALL Java_org_stjr_srb2_SRB2Game_nativeGetGameDup(JNIEnv* env,
 	return vid.dup;
 }
 
-void JNI_UpdateBorder(void *data, size_t size)
+void JNI_ResetBorder(void *data, size_t size)
 {
 	JNIEnv *env = JNI_GetEnv();
 	jclass srb2GameClass = (*env)->FindClass(env, "org/stjr/srb2/SRB2Game");
 	if (srb2GameClass)
 	{
-		jmethodID mid = (*env)->GetStaticMethodID(env, srb2GameClass, "updateBorderImage", "([B)V");
+		jmethodID mid = (*env)->GetStaticMethodID(env, srb2GameClass, "resetBorder", "()V");
 		if (mid)
 		{
-			jbyteArray byteArray = (*env)->NewByteArray(env, size);
-			(*env)->SetByteArrayRegion(env, byteArray, 0, size, (jbyte *)data);
-			(*env)->CallStaticVoidMethod(env, srb2GameClass, mid, byteArray);
-			(*env)->DeleteLocalRef(env, byteArray);
+			(*env)->CallStaticVoidMethod(env, srb2GameClass, mid);
 		}
 		(*env)->DeleteLocalRef(env, srb2GameClass);
 	}
@@ -559,4 +558,73 @@ const char *JNI_GetTouchLayout(void)
 		(*env)->DeleteLocalRef(env, controlsObj);
 	}
 	return layoutName;
+}
+
+static char currentBorder[64] = "";
+
+int JNI_SetLetterboxBorder(const char *name)
+{
+	INT32 i;
+	size_t size = 0;
+	void *data;
+	boolean borderGraphic = false;
+
+	for (i = numwadfiles - 1; i >= 0; i--)
+	{
+		UINT16 lump = W_CheckNumForFullNamePK3(name, (UINT16)i, 0);
+		if (lump != INT16_MAX)
+		{
+			data = (void *) W_CacheLumpNumPwad((UINT16)i, lump, PU_CACHE);
+			size = W_LumpLengthPwad((UINT16) i, lump);
+			borderGraphic = true;
+			break;
+		}
+	}
+	if (!borderGraphic)
+		return false;
+
+	JNIEnv *env = JNI_GetEnv();
+	if (env)
+	{
+		jclass srb2GameClass = (*env)->FindClass(env, "org/stjr/srb2/SRB2Game");
+		// Update method signature to (Ljava/lang/String;[B)V
+		jmethodID mid = (*env)->GetStaticMethodID(env, srb2GameClass, "updateBorderImage", "(Ljava/lang/String;[B)V");
+		if (mid)
+		{
+			jstring jname = (*env)->NewStringUTF(env, name);
+			jbyteArray jdata = (*env)->NewByteArray(env, size);
+			(*env)->SetByteArrayRegion(env, jdata, 0, size, (jbyte *)data);
+
+			(*env)->CallStaticVoidMethod(env, srb2GameClass, mid, jname, jdata);
+
+			(*env)->DeleteLocalRef(env, jname);
+			(*env)->DeleteLocalRef(env, jdata);
+
+			strncpy(currentBorder, name, sizeof(currentBorder) - 1);
+			currentBorder[sizeof(currentBorder) - 1] = '\0';
+		}
+		(*env)->DeleteLocalRef(env, srb2GameClass);
+	}
+	return true;
+}
+
+const char *JNI_GetLetterboxBorder(void)
+{
+	return currentBorder;
+}
+
+void JNI_ResetLetterboxBorder(void)
+{
+	JNIEnv *env = JNI_GetEnv();
+	jclass srb2GameClass = (*env)->FindClass(env, "org/stjr/srb2/SRB2Game");
+	if (srb2GameClass)
+	{
+		jmethodID mid = (*env)->GetStaticMethodID(env, srb2GameClass, "resetBorder", "()V");
+		if (mid)
+		{
+			(*env)->CallStaticVoidMethod(env, srb2GameClass, mid);
+			currentBorder[0] = '\0';
+		}
+		(*env)->DeleteLocalRef(env, srb2GameClass);
+	}
 }

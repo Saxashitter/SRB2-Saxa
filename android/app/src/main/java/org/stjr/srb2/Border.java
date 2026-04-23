@@ -7,17 +7,20 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.graphics.Region;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.View;
 
 public class Border extends View {
     private Rect gameRect;
     private Bitmap bitmap;
+    private Bitmap _bitmap; // Default bitmap
     private Rect positionRect;
     private Rect bitmapRect;
 
     public Border(Context context, Bitmap bitmap, Rect gameRect) {
         super(context);
         this.bitmap = bitmap;
+        this._bitmap = bitmap;
         this.gameRect = gameRect;
     }
 
@@ -39,7 +42,7 @@ public class Border extends View {
         
         // bitmapRect is the SOURCE area (in the image itself). 
         bitmapRect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        
+
         Log.d("Border", "Layout: " + width + "x" + height + " -> Drawing border at " + positionRect.toShortString());
     }
 
@@ -47,6 +50,7 @@ public class Border extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         setupBorderPositions(w, h);
+        invalidate();
     }
 
     public void setBorderBitmap(Bitmap bitmap) {
@@ -57,7 +61,13 @@ public class Border extends View {
 
     public void setHole(Rect gameRect) {
         this.gameRect = gameRect;
-        invalidate(); // Redraw with the new hole position
+        invalidate();
+    }
+
+    public void resetBitmap() {
+        this.bitmap = _bitmap;
+        setupBorderPositions(getWidth(), getHeight());
+        invalidate();
     }
 
     @Override
