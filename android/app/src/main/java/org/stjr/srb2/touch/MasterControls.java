@@ -20,6 +20,10 @@ public class MasterControls extends View {
     private String currentLayoutName;
     private final Map<Integer, Boolean> currentPressedIDs = new HashMap<>();
     // Initalizes controls and gets control layout.
+    private int cameraId = -1;
+    private float cameraX = 0;
+    private float cameraY = 0;
+
     public MasterControls(Context context, String layoutName) {
         super(context);
 
@@ -92,43 +96,56 @@ public class MasterControls extends View {
         int action = event.getActionMasked();
         int width = getWidth();
         int height = getHeight();
-        boolean pressed = false;
 
-        // Standard logic forwarded to currentLayout
         if (action == MotionEvent.ACTION_MOVE) {
-            float mouseX = 0, mouseY = 0;
-            boolean anyTouchHandled = false;
-
             for (int i = 0; i < event.getPointerCount(); i++) {
                 float x = event.getX(i);
                 float y = event.getY(i);
                 int id = event.getPointerId(i);
 
-                if (currentLayout.handleTouch(action, x, y, id, width, height)) {
-                    anyTouchHandled = true;
-                } else if (!currentPressedIDs.containsKey(id)) {
-                    org.libsdl.app.SDLActivity.onNativeMouse(0, MotionEvent.ACTION_HOVER_MOVE, x, y, true);
-                    Log.d("SRB2", "Turn camera");
+                if (id == cameraId) {
+                    float offsetX = x - cameraX;
+                    float offsetY = y - cameraY;
+
+                    org.libsdl.app.SDLActivity.onNativeMouse(0, MotionEvent.ACTION_MOVE, offsetX, offsetY, true);
+
+                    cameraX = x;
+                    cameraY = y;
+                } else {
+                    currentLayout.handleTouch(action, x, y, id, width, height);
                 }
             }
-            pressed = true;
-        }
-        else {
+        } else {
             int idx = event.getActionIndex();
-            if (currentLayout.handleTouch(action, event.getX(idx), event.getY(idx), event.getPointerId(idx), width, height)) {
-                pressed = true;
-                if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
-                    currentPressedIDs.put(event.getPointerId(idx), true);
+            int id = event.getPointerId(idx);
+            float x = event.getX(idx);
+            float y = event.getY(idx);
 
+            if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
+                if (currentLayout.handleTouch(action, x, y, id, width, height)) {
+                    currentPressedIDs.put(id, true);
+                } else if (cameraId == -1) {
+                    // initialize camera
+                    // this kind of implementation for mobile controls does something really weird
+                    // putting a finger down on the screen with nothing else pressed lets you manipulate mouse movement
+                    // we dont even have to put the effort ourselves lol
+                    // except we do, when other fingers come into play
+                    cameraId = id;
+                    cameraX = x;
+                    cameraY = y;
+                }
+            } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_CANCEL) {
+                if (currentPressedIDs.containsKey(id)) {
+                    currentLayout.handleTouch(action, x, y, id, width, height);
+                    currentPressedIDs.remove(id);
+                } else if (id == cameraId) {
+                    cameraId = -1;
                 }
             }
-
-            if ((action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_CANCEL))
-                currentPressedIDs.remove(event.getPointerId(idx));
         }
 
         invalidate();
-        return pressed;
+        return true; // ALWAYS return true so we don't lose tracking of any finger
     }
 
     @Override
