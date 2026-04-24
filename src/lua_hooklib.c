@@ -1261,3 +1261,32 @@ int LUA_HookPlayerCanEnterSpinGaps(player_t *player)
 	}
 	return hook.status;
 }
+
+#ifdef __ANDROID__
+// ANDROID EXCLUSIVE
+int LUA_HookTouchDown(int id, float x, float y)
+{
+	Hook_State hook;
+	if (prepare_hook(&hook, 0, HOOK(TouchDown)))
+	{
+		lua_pushinteger(gL, id);
+		lua_pushnumber(gL, x);
+		lua_pushnumber(gL, y);
+		call_hooks(&hook, 1, res_true);
+	}
+	return hook.status;
+}
+
+int LUA_HookTouchUp(int id, float x, float y)
+{
+	Hook_State hook;
+	if (prepare_hook(&hook, 0, HOOK(TouchUp)))
+	{
+		lua_pushinteger(gL, id);
+		lua_pushnumber(gL, x);
+		lua_pushnumber(gL, y);
+		call_hooks(&hook, 1, res_true);
+	}
+	return hook.status;
+}
+#endif

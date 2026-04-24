@@ -75,6 +75,8 @@ automatically.
 	X (AddonLoaded),\
 	X (KeyDown),\
 	X (KeyUp),\
+    X (TouchDown),\
+    X (TouchUp),\
 
 #define STRING_HOOK_LIST(X) \
 	X (BotAI),/* B_BuildTailsTiccmd by skin name */\
@@ -161,3 +163,9 @@ int  LUA_HookPlayerCmd(player_t *, ticcmd_t *);
 int  LUA_HookMusicChange(const char *oldname, struct MusicChange *);
 fixed_t LUA_HookPlayerHeight(player_t *player);
 int  LUA_HookPlayerCanEnterSpinGaps(player_t *player);
+
+#ifdef __ANDROID__
+// ANDROID EXCLUSIVE
+int LUA_HookTouchDown(int id, float x, float y);
+int LUA_HookTouchUp(int id, float x, float y);
+#endif

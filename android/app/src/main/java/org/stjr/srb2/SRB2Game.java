@@ -33,6 +33,9 @@ public class SRB2Game extends SDLActivity {
 	public static native int nativeGetGameHeight();
 	public static native int nativeGetGameDup();
 
+	public static native boolean nativeOnTouchDown(int id, float x, float y);
+	public static native boolean nativeOnTouchUp(int id, float x, float y);
+
 	private static LruCache<String, Bitmap> borderCache;
 
 	static {

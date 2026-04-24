@@ -121,7 +121,7 @@ public class MasterControls extends View {
             float x = event.getX(idx);
             float y = event.getY(idx);
 
-            if (action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) {
+            if ((action == MotionEvent.ACTION_DOWN || action == MotionEvent.ACTION_POINTER_DOWN) && !org.stjr.srb2.SRB2Game.nativeOnTouchDown(id, x, y)) {
                 if (currentLayout.handleTouch(action, x, y, id, width, height)) {
                     currentPressedIDs.put(id, true);
                 } else if (cameraId == -1) {
@@ -133,8 +133,9 @@ public class MasterControls extends View {
                     cameraId = id;
                     cameraX = x;
                     cameraY = y;
+                    org.stjr.srb2.SRB2Game.nativeOnTouchDown(id, x, y);
                 }
-            } else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_CANCEL) {
+            } else if ((action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP || action == MotionEvent.ACTION_CANCEL) && !org.stjr.srb2.SRB2Game.nativeOnTouchUp(id, x, y)) {
                 if (currentPressedIDs.containsKey(id)) {
                     currentLayout.handleTouch(action, x, y, id, width, height);
                     currentPressedIDs.remove(id);

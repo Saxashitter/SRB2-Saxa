@@ -80,4 +80,7 @@ void JNI_ResetLetterboxBorder();
 
 boolean JNI_IsInMultiWindowMode(void);
 
+int JNI_OnTouchDown(int id, float x, float y);
+int JNI_OnTouchUp(int id, float x, float y);
+
 #endif

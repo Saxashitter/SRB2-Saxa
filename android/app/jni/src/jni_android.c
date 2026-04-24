@@ -15,6 +15,9 @@
 #include "../../../../src/screen.h" // lol
 #include "../../../../src/w_wad.h" // 2nd lol
 #include "../../../../src/z_zone.h" // 3rd lol
+#include "../../../../src/lua_script.h"
+#include "../../../../src/lua_hook.h"
+#include "../../../../src/lua_libs.h"
 
 static JavaVM *jvm = NULL;
 static JNIEnv *jniEnv = NULL;
@@ -433,6 +436,16 @@ JNIEXPORT jint JNICALL Java_org_stjr_srb2_SRB2Game_nativeGetGameDup(JNIEnv* env,
 	return vid.dup;
 }
 
+JNIEXPORT jboolean JNICALL Java_org_stjr_srb2_SRB2Game_nativeOnTouchDown(JNIEnv *env, jclass cls, jint id, jfloat x, jfloat y)
+{
+	return JNI_OnTouchDown(id, x, y) ? JNI_TRUE : JNI_FALSE;
+}
+
+JNIEXPORT jboolean JNICALL Java_org_stjr_srb2_SRB2Game_nativeOnTouchUp(JNIEnv *env, jclass cls, jint id, jfloat x, jfloat y)
+{
+	return JNI_OnTouchUp(id, x, y) ? JNI_TRUE : JNI_FALSE;
+}
+
 void JNI_ResetBorder(void *data, size_t size)
 {
 	JNIEnv *env = JNI_GetEnv();
@@ -627,4 +640,14 @@ void JNI_ResetLetterboxBorder(void)
 		}
 		(*env)->DeleteLocalRef(env, srb2GameClass);
 	}
+}
+
+int JNI_OnTouchDown(int id, float x, float y)
+{
+	return LUA_HookTouchDown(id, x, y);
+}
+
+int JNI_OnTouchUp(int id, float x, float y)
+{
+	return LUA_HookTouchUp(id, x, y);
 }
