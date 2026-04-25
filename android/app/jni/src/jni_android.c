@@ -16,6 +16,7 @@
 #include "../../../../src/w_wad.h" // 2nd lol
 #include "../../../../src/z_zone.h" // 3rd lol
 #include "../../../../src/lua_script.h"
+#include "../../../../src/netcode/d_clisrv.h" // romoney5: for kickreason_t..
 #include "../../../../src/lua_hook.h"
 #include "../../../../src/lua_libs.h"
 
